@@ -32,6 +32,7 @@ Start/sit projections
 Pick'em
 - My pool: straight-up winners, no confidence points, weekly and season prizes, 20 people, run by text.
 - Win probability = Phi(-spread / 11.25), fit on 2021-2025 (as accurate as moneylines).
+- Edge spots (tested on 2006-2026 vs moneylines, held up in both halves): early-season underdogs (wk 1-4) about +2.8%, underdogs in low-total games (O/U 40 or under) about +2.9%, bigger when it's a small dog (+3 or less). Applied at half strength in pickem.py and tagged EDGE. Small dogs alone, windy games, and Thursday night didn't hold up.
 - The page simulates the week against my pool size to find upset picks worth taking. Modes: Most wins, Balanced (max 2 cheap upsets), Win the week. In a 20-person pool, a couple of cheap upsets per week help a little; in pools of 10 or fewer they rarely do.
 
 Files
