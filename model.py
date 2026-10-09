@@ -266,6 +266,12 @@ class Projector:
                     same_frac = 1.0 if (k == "patt" or qb) else p["same_pos_share"]
                     same = [a for a in avail if players[a]["pos"] == pos]
                     same_tot = sum(shares[a][k] for a in same)
+                    depth_known = [x for x in same if players[x].get("depth")]
+                    if same and qb and depth_known:
+                        # QB out: his whole role goes to the next QB on the depth chart
+                        nxt = min(depth_known, key=lambda x: players[x]["depth"])
+                        shares[nxt][k] += vac; boost[nxt][o][k] += vac
+                        continue
                     if same and same_tot <= 0 and (k == "patt" or qb):
                         # backup QB with no history: next on the depth chart takes over
                         nxt = min(same, key=lambda a: players[a].get("depth") or 99)

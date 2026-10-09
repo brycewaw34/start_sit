@@ -220,7 +220,7 @@ def nfl_ngs(season):
     out = {}
     for r in fetch_csv(NFL_NGS.format(kind="receiving")):
         if r.get("season") == str(season) and r.get("week") == "0" and r.get("season_type", "REG") == "REG":
-            out.setdefault(r["player_gsis_id"], {}).update({
+            out.setdefault(r["player_gsis_id"], {"_name": r.get("player_display_name"), "_team": team_code(r.get("team_abbr"))}).update({
                 "sep": round(num(r["avg_separation"]), 2),
                 "cush": round(num(r["avg_cushion"]), 2),
                 "yacoe": round(num(r["avg_yac_above_expectation"]), 2),
@@ -229,12 +229,18 @@ def nfl_ngs(season):
             })
     for r in fetch_csv(NFL_NGS.format(kind="rushing")):
         if r.get("season") == str(season) and r.get("week") == "0" and r.get("season_type", "REG") == "REG":
-            out.setdefault(r["player_gsis_id"], {}).update({
+            out.setdefault(r["player_gsis_id"], {"_name": r.get("player_display_name"), "_team": team_code(r.get("team_abbr"))}).update({
                 "ryoe": round(num(r["rush_yards_over_expected_per_att"]), 2),
                 "rpoe": round(num(r["rush_pct_over_expected"]) * (100 if num(r["rush_pct_over_expected"]) <= 1 else 1), 1),
                 "box8": round(num(r.get("percent_attempts_gte_eight_defenders")), 1),
             })
     return out
+
+
+def norm_name(s):
+    s = re.sub(r"[.'’`-]", "", (s or "").lower())
+    s = re.sub(r"\b(jr|sr|ii|iii|iv|v)\b", "", s)
+    return re.sub(r"\s+", " ", s).strip()
 
 
 def gsis_map(db):

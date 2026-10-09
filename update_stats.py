@@ -247,7 +247,13 @@ def main():
     try:
         raw = ds.nfl_ngs(season)
         gm = ds.gsis_map(db)
-        ngs = {gm[g]: v for g, v in raw.items() if g in gm}
+        by_name = {}
+        for pid, info in players_in.items():
+            by_name[(ds.norm_name(db[pid].get("full_name")), info["team"])] = pid
+        for g, v in raw.items():
+            pid = gm.get(g) or by_name.get((ds.norm_name(v.get("_name")), v.get("_team")))
+            if pid:
+                ngs[pid] = {k: x for k, x in v.items() if not k.startswith("_")}
         print(f"  {len(ngs)} players matched")
     except Exception as e:  # noqa: BLE001
         print(f"  WARNING: Next Gen Stats unavailable ({e})")
