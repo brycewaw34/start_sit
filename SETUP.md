@@ -64,10 +64,19 @@ Either tell Claude "the repo is created" and it will push the files for you, or 
 - **Live log:** each player's projections are frozen before his game kicks off (`data/live_log_<season>.json`)
   and graded every Tuesday in the model report.
 
+## Pick'em page (`picks.html`)
+- Win chances for every game from the Vegas spread (fit on 2021-2025; as accurate as moneylines).
+- Set how many people are in your pool and your goal: **Most wins** (every favorite), **Balanced**
+  (only cheap upset picks, max 2), or **Win the week** (simulates your pool to find upsets worth taking).
+- Upset picks only pay off in bigger pools. In a ~10-person pool the page will usually say take all favorites.
+- Key injuries, weather, live scores, the tiebreaker total, and a season record of how favorites have done.
+- Updated by the same daily run as the start/sit page. Linked from the start/sit header.
+
 ## Files
 - `diamond_scout_startsit.html`: the tool. Data at the top is rewritten automatically.
 - `update_stats.py`: daily updater. `model.py`: projection model. `datasrc.py`: data sources.
 - `backtest.py` / `backtest.html`: the head-to-head test and its report.
+- `picks.html` / `pickem.py`: the pick'em page and its data builder.
 - `data/`: cached past seasons so runs stay fast.
 
 ## Manual refresh

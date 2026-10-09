@@ -132,6 +132,9 @@ def espn_lines(season, week, prev_lines, prev_week):
         comp = (ev.get("competitions") or [{}])[0]
         teams = {c.get("homeAway"): ds.team_code((c.get("team") or {}).get("abbreviation"))
                  for c in comp.get("competitors", [])}
+        names = {c.get("homeAway"): ((c.get("team") or {}).get("shortDisplayName") or (c.get("team") or {}).get("name") or "")
+                 for c in comp.get("competitors", [])}
+        scores = {c.get("homeAway"): c.get("score") for c in comp.get("competitors", [])}
         home, away = teams.get("home"), teams.get("away")
         if not home or not away:
             continue
@@ -142,7 +145,12 @@ def espn_lines(season, week, prev_lines, prev_week):
         total = odds.get("overUnder")
         fav, line = parse_details(odds.get("details"))
         for team, opp, is_home in ((home, away, True), (away, home, False)):
-            e = {"opp": opp, "home": is_home, "state": state, "kick": kick, "impl": None, "total": None, "spread": None}
+            e = {"opp": opp, "home": is_home, "state": state, "kick": kick, "impl": None, "total": None, "spread": None,
+                 "name": names.get("home" if is_home else "away", "")}
+            if state != "pre":
+                mine, theirs = scores.get("home" if is_home else "away"), scores.get("away" if is_home else "home")
+                if mine not in (None, "") and theirs not in (None, ""):
+                    e["score"], e["opp_score"] = int(float(mine)), int(float(theirs))
             if total is not None and line is not None:
                 t = float(total)
                 if fav is None:
@@ -251,9 +259,9 @@ def main():
     print(f"  {len(rows)} player-games this season, {len(prior)} last season")
 
     print("Step 4: lines, scores, injuries")
-    games = []
+    schedule = []
     try:
-        games = ds.nfl_games(season)
+        schedule = ds.nfl_games(season)
     except Exception as e:  # noqa: BLE001
         print(f"  WARNING: nflverse schedule unavailable ({e})")
     try:
@@ -261,9 +269,9 @@ def main():
         source = "DraftKings via ESPN"
     except Exception as e:  # noqa: BLE001
         print(f"  WARNING: ESPN unavailable ({e}); using nflverse lines")
-        lines, source = ds.lines_from_games(games, week), "nflverse"
-    if not lines and games:
-        lines, source = ds.lines_from_games(games, week), "nflverse"
+        lines, source = ds.lines_from_games(schedule, week), "nflverse"
+    if not lines and schedule:
+        lines, source = ds.lines_from_games(schedule, week), "nflverse"
     try:
         ds.add_weather(lines, week, ds.roofs_from_games(season))
         windy = sorted({t for t, l in lines.items() if (l.get("wind") or 0) >= 15})
@@ -271,7 +279,7 @@ def main():
     except Exception as e:  # noqa: BLE001
         print(f"  WARNING: weather unavailable ({e})")
     byes = sorted(t for t in ALL_TEAMS if t not in lines)
-    team_pts = ds.team_points(games, week)
+    team_pts = ds.team_points(schedule, week)
     print(f"  {len(lines) // 2} games, byes: {', '.join(byes) or 'none'}")
 
     print("Step 5: projections")
@@ -410,6 +418,11 @@ def main():
         DATA_END])
     before, rest = text.split(DATA_START, 1)
     HTML_FILE.write_text(before + block + rest.split(DATA_END, 1)[1], encoding="utf-8")
+    try:
+        import pickem
+        pickem.write_page(season, week, lines, byes, schedule, players, meta["updated"])
+    except Exception as e:  # noqa: BLE001
+        print(f"WARNING: pick'em page not updated ({e})")
     print(f"Done. Wrote {HTML_FILE.name} for Week {week}.")
 
 

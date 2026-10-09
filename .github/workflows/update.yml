@@ -12,6 +12,9 @@ on:
       - update_stats.py
       - model.py
       - datasrc.py
+      - pickem.py
+      - picks.html
+      - config.json
       - diamond_scout_startsit.html
       - .github/workflows/update.yml
 
@@ -40,7 +43,7 @@ jobs:
         run: |
           git config user.name "diamond-scout-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add diamond_scout_startsit.html data/
+          git add diamond_scout_startsit.html picks.html data/
           if git diff --cached --quiet; then echo "No changes."; exit 0; fi
           git commit -m "Auto-update data $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
