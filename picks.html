@@ -61,6 +61,7 @@ a{color:var(--gold);text-decoration:none}
 .chip.warn{color:var(--gold)}
 .chip.bad{color:var(--red);border-color:rgba(241,107,107,.35)}
 .chip.good{color:var(--green);border-color:rgba(61,214,140,.35)}
+.chip.edge{color:#b48eff;border-color:rgba(180,142,255,.45)}
 .final .tname{opacity:.8}
 
 h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:28px 0 10px}
@@ -113,6 +114,7 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
     <p><strong>Win chances come straight from the Vegas spread.</strong> Tested on 2021-2025, a spread predicts winners exactly as well as the moneyline, and the numbers are honest: teams given 70-75% won 75% of the time. No model built from public stats reliably beats this, so we don't pretend to.</p>
     <p><strong>Most wins</strong> picks every favorite. That's the best play for season standings, especially in a small pool.</p>
     <p><strong>Win the week</strong> simulates your week thousands of times against the rest of your pool, assuming most people take favorites (and big favorites almost unanimously). If everyone has the same picks, nobody gains ground. Taking an underdog in a near coin-flip game costs you very little in expected wins but gives you a real chance to jump the field when it hits. The page only suggests flips that raise your odds of winning the week.</p>
+    <p><strong>Edge spots.</strong> On 2006-2026 games, two kinds of underdogs beat their moneyline odds in both halves of the data: early-season dogs (weeks 1-4, about +2.8%) and dogs in low-scoring games (total 40 or under, about +2.9%), with bigger edges when they're small underdogs (+3 or less). Those dogs get a boost at half that size, since some of it is surely luck, and are tagged EDGE. The simulator uses the boosted chances, so it prefers edge-spot underdogs when picking upsets. Your pool is still assumed to pick off the raw Vegas line.</p>
     <p><strong>Balanced</strong> takes only the cheap flips: games where the underdog has at least a 40% chance, max two per week. A good default when there are both weekly and season prizes.</p>
     <p>Tap any team to override a pick. Injury tags and wind are shown for context; Vegas lines already move for big news, so they aren't added on top.</p>
   </div>
@@ -140,10 +142,12 @@ try{const o=JSON.parse(store.get('pk-override')||'{}'); if(o.week===wk) Object.a
 
 // ── games prepared ──────────────────────────────────────────────────────────
 const G=PICK.games.map((g,i)=>{
-  const ph=g.p_home;
-  const fav=ph==null?null:(ph>=0.5?'home':'away');
-  const pf=ph==null?null:Math.max(ph,1-ph);
-  const pub=pf==null?null:Math.pow(pf,PUBLIC_K)/(Math.pow(pf,PUBLIC_K)+Math.pow(1-pf,PUBLIC_K));
+  const ph=g.p_home, praw=g.p_home_raw??g.p_home;
+  // favorite = Vegas favorite; win chance includes any edge boost; the pool picks off the raw Vegas line
+  const fav=praw==null?null:(praw>=0.5?'home':'away');
+  const pf=ph==null?null:(fav==='home'?ph:1-ph);
+  const prf=praw==null?null:Math.max(praw,1-praw);
+  const pub=prf==null?null:Math.pow(prf,PUBLIC_K)/(Math.pow(prf,PUBLIC_K)+Math.pow(1-prf,PUBLIC_K));
   let winner=null;
   if(g.state==='post'&&g.score_home!=null) winner=g.score_home>g.score_away?'home':g.score_home<g.score_away?'away':'tie';
   return {...g,i,fav,pf,pub,winner,open:g.state==='pre'&&ph!=null};
@@ -261,6 +265,7 @@ function render(){
     if(g.open&&g.fav) meta.push(`<span class="chip">~${pct(g.pub)} of pool on ${esc(teamSide(g,g.fav).abbr)}</span>`);
     if(pick) meta.push(`<span class="chip ${flip?'dog':'pick'}">PICK: ${esc(teamSide(g,pick).name)}${flip?' (upset)':''}</span>`);
     [...g.inj_away.map(x=>[g.away,x]),...g.inj_home.map(x=>[g.home,x])].forEach(([t,x])=>meta.push(`<span class="chip ${x.s==='Out'?'bad':'warn'}">${esc(t)} ${esc(x.p)} ${esc(x.n)}: ${esc(x.s)}</span>`));
+    if(g.edge){const e=teamSide(g,g.edge.side); meta.push(`<span class="chip edge">EDGE: ${esc(e.abbr)} +${(g.edge.adj*100).toFixed(1)}% (${esc(g.edge.why.join(', '))})</span>`);}
     if(g.dome) meta.push('dome');
     else if(g.wind!=null) meta.push(`<span class="${g.wind>=15?'chip warn':''}">${Math.round(g.wind)} mph wind${g.rain>=1?', rain':''}${g.temp!=null?`, ${g.temp}°F`:''}</span>`);
     if(g.winner&&g.winner!=='tie'&&pick) meta.push(`<span class="chip ${pick===g.winner?'good':'bad'}">FINAL ${g.score_away}-${g.score_home} · ${pick===g.winner?'pick hit':'pick missed'}</span>`);

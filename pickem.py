@@ -22,6 +22,28 @@ def win_prob(spread):
     return 0.5 * (1 + erf(-spread / (SIGMA * sqrt(2))))
 
 
+# Underdog spots that beat the moneyline on 2006-2026 regular-season games, in both halves of the data.
+# Applied at HALF the measured size, since some of it is surely luck.
+#   early season (wk 1-4) dogs: +2.8%   low total (<= 40) dogs: +2.9%
+#   small dog (+3 or less) + low total: +5.5%   small dog + early season: +6.4%
+def edge_adjustment(week, line, total):
+    """Extra win chance (0-1) for the underdog, and the reasons."""
+    early, low = week <= 4, total is not None and total <= 40
+    small = line is not None and abs(line) <= 3
+    adj, why = 0.0, []
+    if early:
+        adj += 0.014; why.append("early-season underdog")
+    if low:
+        adj += 0.0145; why.append("low-scoring game")
+    if small and early:
+        adj = max(adj, 0.032)
+    if small and low:
+        adj = max(adj, 0.0275)
+    if small and why:
+        why.insert(0, "small underdog")
+    return min(adj, 0.04), why
+
+
 def key_injuries(players, team):
     """Starters and difference-makers with an injury tag this week."""
     out = []
@@ -47,7 +69,14 @@ def build(season, week, lines, byes, games, players, updated):
              "wind": ln.get("wind"), "gust": ln.get("gust"), "rain": ln.get("rain"), "temp": ln.get("temp"), "dome": ln.get("dome"),
              "inj_home": key_injuries(players, team), "inj_away": key_injuries(players, away)}
         if ln.get("spread") is not None:
-            g["p_home"] = round(win_prob(ln["spread"]), 4)
+            raw = win_prob(ln["spread"])
+            g["p_home_raw"] = round(raw, 4)
+            adj, why = edge_adjustment(week, ln["spread"], ln.get("total"))
+            if adj and abs(ln["spread"]) > 0:
+                home_dog = ln["spread"] > 0
+                g["edge"] = {"side": "home" if home_dog else "away", "adj": round(adj, 4), "why": why}
+                raw = raw + adj if home_dog else raw - adj
+            g["p_home"] = round(raw, 4)
         if "score" in ln:
             g["score_home"], g["score_away"] = ln["score"], ln.get("opp_score")
         week_games.append(g)
