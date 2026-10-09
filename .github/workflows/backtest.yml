@@ -1,0 +1,40 @@
+name: Model report (Sleeper vs model vs actual)
+
+on:
+  schedule:
+    - cron: "0 15 * * 2"    # Tuesdays ~8am Pacific, after Monday night's game
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - backtest.py
+      - model.py
+      - datasrc.py
+      - .github/workflows/backtest.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run head-to-head test
+        run: python backtest.py
+      - name: Save report
+        run: |
+          git config user.name "diamond-scout-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backtest.html data/
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "Model report $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
