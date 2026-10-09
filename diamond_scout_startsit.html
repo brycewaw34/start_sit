@@ -87,6 +87,28 @@ a{color:var(--gold);text-decoration:none}
 .hint{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--t3);margin-top:8px;min-height:1em}
 
 .results{display:none}.results.show{display:block}
+.lineup{background:var(--s1);border:1px solid var(--b1);border-radius:4px;margin-bottom:22px}
+.lu-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.lu-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.lu-head select{background:var(--s2);border:1px solid var(--b2);color:var(--text);padding:5px 8px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;max-width:100%}
+.lu-toggle{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--t3);cursor:pointer;background:none;border:none}
+.lu-body{padding:6px 0}
+.lu-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:6px 14px;border-bottom:1px solid rgba(28,37,53,.5);cursor:pointer}
+.lu-row:hover{background:rgba(27,38,60,.5)}
+.lu-row:last-child{border-bottom:none}
+.lu-slot{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--t3);letter-spacing:1px}
+.lu-name{font-size:.8rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lu-name .lu-sub{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:var(--t3);font-weight:400;margin-left:6px}
+.lu-rng{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--t3)}
+.lu-pj{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--gold);font-weight:500;min-width:36px;text-align:right}
+.lu-swaps{padding:9px 14px;border-top:1px solid var(--b1);background:var(--s3);font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--t2);line-height:1.7}
+.lu-swaps .good{color:var(--teal)}.lu-swaps .dim{color:var(--t3)}
+.lu-sec{font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:var(--t3);letter-spacing:1.5px;padding:8px 14px 2px;text-transform:uppercase}
+.own{font-family:'IBM Plex Mono',monospace;font-size:.48rem;padding:1px 5px;border-radius:2px;border:1px solid var(--b2);color:var(--t3);white-space:nowrap}
+.own.me{color:var(--gold);border-color:rgba(240,180,41,.35)}
+.own.fa{color:var(--teal);border-color:rgba(45,212,191,.35)}
+.rng{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--t3)}
+@media (max-width:720px){.lu-rng{display:none}.lu-name .lu-sub{display:block;margin-left:0}}
 .verdict{background:var(--s2);border:1px solid var(--b1);border-radius:4px;padding:20px 24px;margin-bottom:16px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
 .vname{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;line-height:1}
 .vtag{font-family:'IBM Plex Mono',monospace;font-size:.56rem;padding:2px 9px;border-radius:2px;letter-spacing:2px;display:inline-block;margin-top:5px}
@@ -150,12 +172,22 @@ a{color:var(--gold);text-decoration:none}
 <div class="app">
   <div class="top-row">
     <span class="sc-lbl">Scoring</span>
+    <button class="sc-pill" data-sc="lg" id="lg-pill" style="display:none">My League</button>
     <button class="sc-pill on" data-sc="ppr">PPR</button>
     <button class="sc-pill" data-sc="half">Half PPR</button>
     <button class="sc-pill" data-sc="std">Standard</button>
     <span class="wk-info" id="wk-info"></span>
   </div>
   <div class="model-note" id="model-note"></div>
+
+  <div class="lineup" id="lineup" style="display:none">
+    <div class="lu-head">
+      <span class="lu-title">Best lineup</span>
+      <select id="team-sel"></select>
+      <button class="lu-toggle" id="lu-toggle">hide</button>
+    </div>
+    <div id="lu-content"><div class="lu-body" id="lu-body"></div><div class="lu-swaps" id="lu-swaps"></div></div>
+  </div>
 
   <div class="compare" id="compare"></div>
 
@@ -752,7 +784,14 @@ const PLAYERS=[
 
 const OUT_STATUSES=['Out','IR','PUP','Sus','NA','DNR','COV','Doubtful'];
 const SIGMA=9.75;   // spread of start/sit outcomes, calibrated in the backtest
-let scoring='ppr';
+// 20th/80th percentile outcome vs projection, fit on 2025 results (about 60% of games land in between)
+const RANGE={QB:{f:[0.772,-4.26],c:[0.744,9.36]},RB:{f:[0.616,-1.53],c:[1.356,1.73]},WR:{f:[0.671,-2.94],c:[1.355,1.3]},TE:{f:[0.687,-2.3],c:[1.446,1.36]}};
+const L_=typeof LEAGUE!=='undefined'&&LEAGUE?LEAGUE:null;
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+let scoring=L_?'lg':'ppr';
+const OWNER={};  // player id -> league team index
+if(L_) L_.teams.forEach((t,i)=>t.players.forEach(pid=>OWNER[pid]=i));
+let myTeam=L_?(()=>{const s=store.get('ds-team');const i=L_.teams.findIndex(t=>String(t.rid)===s);return i>=0?i:Math.max(0,L_.teams.findIndex(t=>t.owner===L_.me));})():-1;
 const sel=[null,null], results=[[],[]], hi=[0,0];
 
 const $=id=>document.getElementById(id);
@@ -768,6 +807,23 @@ PLAYERS.forEach(p=>{p._k=norm(p.n);});
 
 // ── per-player derived values ───────────────────────────────────────────────
 const proj=p=>p?.pj?.[scoring]??null;
+const range=p=>{const v=proj(p);const r=RANGE[p?.p];if(v==null||!r||v<=0)return null;return{lo:Math.max(0,r.f[0]*v+r.f[1]),hi:r.c[0]*v+r.c[1]};};
+function ownTag(p){
+  if(!L_) return '';
+  const i=OWNER[p.id];
+  if(i===undefined) return '<span class="own fa">FA</span>';
+  if(i===myTeam) return '<span class="own me">MINE</span>';
+  return `<span class="own">${esc(L_.teams[i].name.slice(0,14))}</span>`;
+}
+function weatherNote(L){
+  if(!L) return '';
+  if(L.dome) return 'dome';
+  const bits=[];
+  if(L.wind!=null) bits.push(`${Math.round(L.wind)} mph wind`);
+  if(L.rain>=1) bits.push('rain');
+  if(L.temp!=null&&L.temp<=32) bits.push(`${L.temp}°F`);
+  return bits.join(', ');
+}
 const isBye=p=>!!p&&BYES.includes(p.t);
 const isOut=p=>!!p&&(isBye(p)||OUT_STATUSES.includes(p.inj));
 const gameOf=p=>p&&!isBye(p)?LINES[p.t]:null;
@@ -797,7 +853,9 @@ function renderHeader(){
   if(BYES.length) txt+=` · BYE: ${BYES.join(', ')}`;
   $('wk-info').innerHTML=txt;
   const w=META.modelWeight??0.25, acc=META.accuracy;
-  $('model-note').innerHTML=`Projection = ${Math.round((1-w)*100)}% Sleeper + ${Math.round(w*100)}% Diamond Scout model`+
+  const we=META.espnWeight||0;
+  $('model-note').innerHTML=(we?`Projection = ${Math.round((1-w)*(1-we)*100)}% Sleeper + ${Math.round(w*(1-we)*100)}% Diamond Scout model + ${Math.round(we*100)}% ESPN`:`Projection = ${Math.round((1-w)*100)}% Sleeper + ${Math.round(w*100)}% Diamond Scout model`)+
+    (L_?` · My League = ${esc(L_.name)} scoring`:'')+
     (acc?` · called ${pctS(acc.final)} of start/sit pairs right in testing (Sleeper alone ${pctS(acc.sleeper)})`:'')+
     ` · <a href="backtest.html">model report ↗</a>`;
 }
@@ -854,7 +912,7 @@ function onSearch(n,val){
   sd.innerHTML=r.map((p,i)=>{
     const tags=(p.inj?`<span class="si-inj${OUT_STATUSES.includes(p.inj)?' out':''}">${esc(p.inj.toUpperCase())}</span>`:'')+(isBye(p)?'<span class="si-inj out">BYE</span>':'');
     const pj=proj(p);
-    return `<div class="search-item${i===0?' sel':''}" data-i="${i}"><span class="ppos-badge pos-${p.p}">${p.p}</span><span class="si-name">${esc(p.n)}</span>${tags}<span class="si-meta">${esc(p.t)}${pj?` · proj ${f1(pj)}`:''}</span></div>`;
+    return `<div class="search-item${i===0?' sel':''}" data-i="${i}"><span class="ppos-badge pos-${p.p}">${p.p}</span><span class="si-name">${esc(p.n)}</span>${tags}${ownTag(p)}<span class="si-meta">${esc(p.t)}${pj?` · proj ${f1(pj)}`:''}</span></div>`;
   }).join('');
   sd.querySelectorAll('.search-item').forEach(el=>{
     el.addEventListener('mouseenter',()=>{hi[n-1]=+el.dataset.i;highlight(n);});
@@ -883,7 +941,8 @@ function fillCard(n){
   set(`pos${n}`,p.p);
   let tm=esc(p.t);
   if(bye) tm+=' · BYE';
-  else if(L){tm+=` ${L.home===false?'@':'vs'} ${esc(L.opp)}`; if(L.state==='post') tm+=' · FINAL'; else if(L.state==='in') tm+=' · LIVE';}
+  else if(L){tm+=` ${L.home===false?'@':'vs'} ${esc(L.opp)}`; if(L.state==='post') tm+=' · FINAL'; else if(L.state==='in') tm+=' · LIVE';
+    const wn=weatherNote(L); if(wn) tm+=` <span class="dim">· ${esc(wn)}</span>`;}
   set(`tm${n}`,tm);
 
   const st=$(`st${n}`); st.style.display='';
@@ -896,6 +955,9 @@ function fillCard(n){
   const subs=[];
   if(p.ps) subs.push(`Sleeper ${f1(p.ps[scoring])}`);
   if(p.pm) subs.push(`Our model ${f1(p.pm[scoring])}`);
+  const rg=range(p);
+  if(rg) subs.push(`<span class="rng">Range ${f1(rg.lo)} to ${f1(rg.hi)}</span>`);
+  if(L_) subs.push(ownTag(p));
   set(`pjs${n}`,subs.join('<br>'));
 
   set(`vg${n}`,L&&L.impl!=null?`${f1(L.impl)} <span class="dim">·</span> ${f1(L.total)}`:'—');
@@ -928,6 +990,8 @@ function fillCard(n){
   if(gap!=null&&gap>=3) info.push(`<span class="good">Usage says ${f1(gap)} more pts/G than he's scored. Due for more.</span>`);
   if(gap!=null&&gap<=-3) info.push(`<span class="meh">Scoring ${f1(-gap)} pts/G above what his usage supports. Expect a dip.</span>`);
   if(L&&L.state==='post') info.push('<span class="meh">Game already final.</span>');
+  if(L&&!L.dome&&(L.wind||0)>=15) info.push(`<span class="meh">Windy: ${Math.round(L.wind)} mph forecast${L.gust?` (gusts ${Math.round(L.gust)})`:''}, passing game trimmed.</span>`);
+  else if(L&&(L.rain||0)>=2) info.push('<span class="meh">Heavy rain in the forecast.</span>');
   if(!bye&&!L) info.push('<span class="meh">No game found for this team.</span>');
   info.push(p.g?esc(META.statsNote||''):'No games yet this season.');
   $(`info${n}`).innerHTML=info.join(' ');
@@ -947,8 +1011,9 @@ function advText(p){
 document.querySelectorAll('.sc-pill').forEach(b=>b.addEventListener('click',()=>{
   scoring=b.dataset.sc;
   document.querySelectorAll('.sc-pill').forEach(x=>x.classList.toggle('on',x===b));
-  $('sc-badge').textContent=scoring==='ppr'?'PPR':scoring==='half'?'HALF PPR':'STD';
+  $('sc-badge').textContent=scoringLabel();
   [1,2].forEach(fillCard);
+  renderLineup();
   if($('results').classList.contains('show')) analyze();
 }));
 
@@ -1000,7 +1065,10 @@ function analyze(){
   const r=(lbl,va,vb,hb,fmt=f1)=>[lbl,va,vb,hb,fmt];
   const rows=[
     r('Projected pts',proj(a),proj(b),true),
+    r('Floor (bad week)',range(a)?.lo,range(b)?.lo,true),
+    r('Ceiling (good week)',range(a)?.hi,range(b)?.hi,true),
     r('Sleeper proj',a.ps?.[scoring],b.ps?.[scoring],true),
+    r('ESPN proj',a.pe?.[scoring],b.pe?.[scoring],true),
     r('Our model proj',a.pm?.[scoring],b.pm?.[scoring],true),
     r('Pts/G L3',a.g?a[scoring]:null,b.g?b[scoring]:null,true),
     r('Expected pts/G L3',a.xp?.[scoring],b.xp?.[scoring],true),
@@ -1049,13 +1117,88 @@ function writeUp(a,b,w,l,pw,pl,prob,forced){
     if(l.tr!=null&&l.tr>=0.05) cl.push(`his role has been growing`);
     if(cl.length) out.push(`The case for ${esc(l.n)}: ${cl.join('; ')}.`);
   }
+  const rw=range(w), rl=range(l);
+  if(!forced&&rw&&rl){
+    const safer=rw.lo>=rl.lo?w:l, upside=rw.hi>=rl.hi?w:l;
+    if(safer!==upside) out.push(`Need a safe floor? ${esc(safer.n)} (bad week ~${f1(range(safer).lo)}). Need a big game? ${esc(upside.n)} (good week ~${f1(range(upside).hi)}).`);
+    else out.push(`${esc(w.n)} has both the higher floor (~${f1(rw.lo)}) and the higher ceiling (~${f1(rw.hi)}).`);
+  }
+  const ww=gameOf(w);
+  if(ww&&!ww.dome&&(ww.wind||0)>=15) out.push(`Wind watch: ${Math.round(ww.wind)} mph forecast for ${esc(w.n)}'s game.`);
   if(w.inj&&!isOut(w)) out.push(`Heads up: ${esc(w.n)} is listed ${esc(w.inj)}. If he's ruled out, flip to ${esc(l.n)}.`);
   if(gameOf(w)?.state==='post') out.push(`Note: ${esc(w.n)}'s game is already final.`);
   if(!w.pj) out.push(`${esc(w.n)} has no projection yet, so treat this as a gut call.`);
   return out.join(' ');
 }
 
+// ── my team: best lineup ───────────────────────────────────────────────────
+function scoringLabel(){return scoring==='lg'?'MY LEAGUE':scoring==='ppr'?'PPR':scoring==='half'?'HALF PPR':'STD';}
+const SLOT_ELIG={QB:['QB'],RB:['RB'],WR:['WR'],TE:['TE'],FLEX:['RB','WR','TE'],REC_FLEX:['WR','TE'],WRRB_FLEX:['RB','WR'],SUPER_FLEX:['QB','RB','WR','TE']};
+const SLOT_LBL={FLEX:'FLEX',REC_FLEX:'W/T',WRRB_FLEX:'W/R',SUPER_FLEX:'SF'};
+const BYID={}; PLAYERS.forEach(p=>BYID[p.id]=p);
+function bestLineup(ids){
+  const pool=ids.map(id=>BYID[id]).filter(Boolean);
+  const slots=(L_.positions||[]).filter(s=>SLOT_ELIG[s]);
+  // fill the most restrictive slots first; with nested flex slots this greedy fill is optimal
+  const order=[...slots.keys()].sort((a,b)=>SLOT_ELIG[slots[a]].length-SLOT_ELIG[slots[b]].length);
+  const used=new Set(), filled=new Array(slots.length).fill(null);
+  for(const i of order){
+    const c=pool.filter(p=>!used.has(p.id)&&SLOT_ELIG[slots[i]].includes(p.p)).sort((a,b)=>(proj(b)??-1)-(proj(a)??-1))[0];
+    if(c){filled[i]=c;used.add(c.id);}
+  }
+  return {slots,filled,bench:pool.filter(p=>!used.has(p.id)).sort((a,b)=>(proj(b)??-1)-(proj(a)??-1))};
+}
+function luRow(slot,p){
+  if(!p) return `<div class="lu-row"><span class="lu-slot">${slot}</span><span class="lu-name" style="color:var(--t3)">empty</span><span></span><span></span></div>`;
+  const L=gameOf(p), rg=range(p), st=isBye(p)?'BYE':p.inj?p.inj.toUpperCase():'';
+  const sub=`${esc(p.t)}${L?` ${L.home===false?'@':'vs'} ${esc(L.opp)}`:''}${st?` · <span style="color:var(--${isOut(p)?'red':'gold'})">${esc(st)}</span>`:''}`;
+  return `<div class="lu-row" data-id="${p.id}"><span class="lu-slot">${slot}</span><span class="lu-name"><span class="ppos-badge pos-${p.p}">${p.p}</span> ${esc(p.n)}<span class="lu-sub">${sub}</span></span><span class="lu-rng">${rg?`${f1(rg.lo)}–${f1(rg.hi)}`:''}</span><span class="lu-pj">${f1(proj(p))}</span></div>`;
+}
+let nextCard=1;
+function renderLineup(){
+  if(!L_||myTeam<0) return;
+  const team=L_.teams[myTeam];
+  const {slots,filled,bench}=bestLineup(team.players);
+  const total=filled.reduce((s,p)=>s+(proj(p)||0),0);
+  $('lu-body').innerHTML=slots.map((s,i)=>luRow(SLOT_LBL[s]||s,filled[i])).join('')+
+    `<div class="lu-sec">Bench</div>`+bench.map(p=>luRow('BN',p)).join('');
+  // compare with the lineup currently set in Sleeper
+  const best=new Set(filled.filter(Boolean).map(p=>p.id));
+  const cur=new Set(team.starters.filter(id=>BYID[id]));
+  const ins=[...best].filter(id=>!cur.has(id)).map(id=>BYID[id]).sort((a,b)=>proj(b)-proj(a));
+  const outs=[...cur].filter(id=>!best.has(id)).map(id=>BYID[id]).sort((a,b)=>proj(a)-proj(b));
+  let sw=`Projected starters: <strong style="color:var(--gold)">${f1(total)}</strong> pts · K and DEF not projected.`;
+  if(!team.starters.length) sw+=' No lineup set in Sleeper yet.';
+  else if(!ins.length) sw+=' <span class="good">Your Sleeper lineup already matches the best lineup.</span>';
+  else{
+    const curTotal=[...cur].reduce((s,id)=>s+(proj(BYID[id])||0),0);
+    sw+=`<br>Vs your current Sleeper lineup (<span class="good">+${f1(total-curTotal)} pts</span>): start ${ins.map(p=>`<strong>${esc(p.n)}</strong> (${f1(proj(p))})`).join(', ')}`+
+      (outs.length?`; bench ${outs.map(p=>`${esc(p.n)} (${f1(proj(p))}${isOut(p)?`, ${isBye(p)?'bye':esc(p.inj)}`:''})`).join(', ')}`:'')+'.';
+  }
+  sw+='<br><span class="dim">Tap a player to load him into the comparison below. Sleeper lineup as of the last update.</span>';
+  $('lu-swaps').innerHTML=sw;
+  $('lu-body').querySelectorAll('.lu-row[data-id]').forEach(el=>el.addEventListener('click',()=>{
+    const p=BYID[el.dataset.id]; if(!p) return;
+    results[nextCard-1]=[p]; pick(nextCard,0); nextCard=nextCard===1?2:1;
+    $('compare').scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+}
+function initLeague(){
+  if(!L_) return;
+  $('lg-pill').style.display='';
+  document.querySelectorAll('.sc-pill').forEach(x=>x.classList.toggle('on',x.dataset.sc===scoring));
+  $('sc-badge').textContent=scoringLabel();
+  $('lineup').style.display='';
+  $('team-sel').innerHTML=L_.teams.map((t,i)=>`<option value="${i}"${i===myTeam?' selected':''}>${esc(t.name)}${t.owner&&t.owner!==t.name?` (${esc(t.owner)})`:''}</option>`).join('');
+  $('team-sel').addEventListener('change',e=>{myTeam=+e.target.value;store.set('ds-team',String(L_.teams[myTeam].rid));renderLineup();[1,2].forEach(fillCard);});
+  const setHidden=hd=>{$('lu-content').style.display=hd?'none':'';$('lu-toggle').textContent=hd?'show':'hide';store.set('ds-lu-hidden',hd?'1':'0');};
+  setHidden(store.get('ds-lu-hidden')==='1');
+  $('lu-toggle').addEventListener('click',()=>setHidden($('lu-content').style.display!=='none'));
+  renderLineup();
+}
+
 renderHeader();
+initLeague();
 </script>
 </body>
 </html>

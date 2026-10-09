@@ -48,6 +48,22 @@ Either tell Claude "the repo is created" and it will push the files for you, or 
   Stats via nflverse. They're shown for context but not weighted, since testing shows they add little
   once you know a player's usage.
 
+## Your league
+- `config.json` holds your Sleeper league ID and which team is yours (`my_team_owner`). Change it there.
+- **My League** scoring (default) uses your league's exact rules: 6-pt passing TDs, -1 INT, yardage bonuses.
+  Projections are scored by those rules, including the expected chance of hitting a yardage bonus.
+- **Best lineup** fills your QB/RB/WR/FLEX/W-T slots with the highest projections and lists the changes
+  vs the lineup currently set in Sleeper. The team dropdown shows any team in the league.
+- Search tags each player **MINE**, **FA** (free agent), or the team that rosters him.
+
+## Extra signals
+- **Weather:** wind, gusts, rain, and temperature for outdoor games (Open-Meteo, free). Backtesting showed
+  passing/receiving drops about 2% per mph of wind above 10, so that's built into the model.
+- **Floor / ceiling:** the 20th to 80th percentile range of outcomes for a projection, fit on 2025 results.
+- **ESPN projections:** pulled and saved every day but only blended in after 3+ graded weeks show they help.
+- **Live log:** each player's projections are frozen before his game kicks off (`data/live_log_<season>.json`)
+  and graded every Tuesday in the model report.
+
 ## Files
 - `diamond_scout_startsit.html`: the tool. Data at the top is rewritten automatically.
 - `update_stats.py`: daily updater. `model.py`: projection model. `datasrc.py`: data sources.

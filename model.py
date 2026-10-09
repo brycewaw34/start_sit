@@ -55,6 +55,8 @@ PARAMS = {  # tuned on 2024, validated on 2025 (see backtest)
     "env_weight": 0.5,            # how hard implied points vs normal bites
     "env_prior": 3.0,             # games of league-average scoring mixed in
     "q_mult": 0.93,               # questionable players
+    "wind_k": 0.02,               # passing/receiving pts lost per mph of wind above wind_free
+    "wind_free": 10.0,            # wind (mph) below which nothing changes
     "vac_redistribute": 0.8,      # share of a missing player's work that goes to known teammates
 }
 
@@ -62,6 +64,8 @@ OUT_STATUSES = {"out", "ir", "pup", "sus", "na", "dnr", "cov", "doubtful"}
 
 
 def comp_points(r, sc):
+    if sc == "lg":  # your league's exact scoring, precomputed per stat group in datasrc.to_row
+        return r.get("lg_rec", 0.0), r.get("lg_rush", 0.0), r.get("lg_pass", 0.0)
     rec = r["rec"] * REC_VALUE[sc] + r["rec_yd"] / 10 + 6 * r["rec_td"]
     rush = r["rush_yd"] / 10 + 6 * r["rush_td"] - 2 * r["fum_lost"] + 2 * r.get("two_pt", 0)
     pas = r["pass_yd"] / 25 + 4 * r["pass_td"] - 2 * r["pass_int"]
@@ -77,18 +81,66 @@ def x_points(r, pos, sc):
     return rec, rush, pas
 
 
+def _solve(A, b):
+    """Tiny least-squares solve (normal equations + Gaussian elimination)."""
+    n = len(b)
+    M = [row[:] + [b[i]] for i, row in enumerate(A)]
+    for c in range(n):
+        piv = max(range(c, n), key=lambda r: abs(M[r][c]))
+        if abs(M[piv][c]) < 1e-9:
+            return None
+        M[c], M[piv] = M[piv], M[c]
+        for r in range(n):
+            if r != c:
+                f = M[r][c] / M[c][c]
+                M[r] = [x - f * y for x, y in zip(M[r], M[c])]
+    return [M[i][n] / M[i][i] for i in range(n)]
+
+
+def _lstsq(X, y):
+    k = len(X[0])
+    A = [[sum(x[i] * x[j] for x in X) for j in range(k)] for i in range(k)]
+    b = [sum(x[i] * yy for x, yy in zip(X, y)) for i in range(k)]
+    return _solve(A, b)
+
+
+def fit_league_coef(rows):
+    """Expected-points coefficients for your league's scoring, fit on the rows given."""
+    have = [r for r in rows if "lg_rec" in r]
+    if len(have) < 500:
+        COEF["lg"] = COEF["ppr"]
+        return
+    out = {}
+    for pos in ("WR", "TE", "RB", "QB"):
+        rec_src = [r for r in have if r["pos"] == (pos if pos != "QB" else "WR") and r["tgt"] > 0]
+        rush_src = [r for r in have if (r["pos"] == pos if pos in ("RB", "QB") else r["pos"] in ("WR", "TE")) and r["car"] > 0]
+        rec = _lstsq([[r["tgt"], r["air"], r["rz_tgt"]] for r in rec_src], [r["lg_rec"] for r in rec_src]) if len(rec_src) > 50 else None
+        rush = _lstsq([[r["car"], r["rz_car"]] for r in rush_src], [r["lg_rush"] for r in rush_src]) if len(rush_src) > 50 else None
+        pas = [0.0, 0.0]
+        if pos == "QB":
+            ps = [r for r in have if r["pos"] == "QB" and r["patt"] > 0]
+            pas = _lstsq([[r["patt"], r["rz_patt"]] for r in ps], [r["lg_pass"] for r in ps]) if len(ps) > 50 else None
+        base = COEF["ppr"][pos]
+        out[pos] = {"rec": rec or base["rec"], "rush": rush or base["rush"], "pass": pas or base["pass"]}
+    COEF["lg"] = out
+
+
 def _wavg(pairs):
     tw = sum(w for w, _ in pairs)
     return sum(w * v for w, v in pairs) / tw if tw else 0.0
 
 
 class Projector:
-    def __init__(self, rows, season, week, params=None, prior_rows=None):
-        """rows: this season's player-games before `week`. prior_rows: last season."""
+    def __init__(self, rows, season, week, params=None, prior_rows=None, league=False):
+        """rows: this season's player-games before `week`. prior_rows: last season.
+        league=True adds an 'lg' scoring computed from your league's settings."""
         self.p = dict(PARAMS, **(params or {}))
+        self.scorings = SCORINGS + (("lg",) if league else ())
         self.season, self.week = season, week
         self.rows = [r for r in rows if r["season"] == season and r["week"] < week]
         self.prior = prior_rows or []
+        if league:
+            fit_league_coef(self.rows + self.prior)
         self._index()
 
     # ── precompute team and player tables ────────────────────────────────────
@@ -123,7 +175,7 @@ class Projector:
         allowed = defaultdict(float)
         dgames = defaultdict(set)
         for r in self.rows:
-            for sc in SCORINGS:
+            for sc in self.scorings:
                 allowed[(r["opp"], r["pos"], sc)] += sum(comp_points(r, sc))
             dgames[r["opp"]].add(r["week"])
         self.def_games = {t: len(w) for t, w in dgames.items()}
@@ -298,19 +350,21 @@ class Projector:
                 pos = info["pos"]
                 r = {"pos": pos, "team": team, "status": st[pid], "has_hist": bool(base[pid])}
                 if line is None:
-                    r.update({"bye": True, **{sc: 0.0 for sc in SCORINGS}})
+                    r.update({"bye": True, **{sc: 0.0 for sc in self.scorings}})
                     res[pid] = r
                     continue
                 if pid in out:
-                    r.update({"out": True, **{sc: 0.0 for sc in SCORINGS}})
+                    r.update({"out": True, **{sc: 0.0 for sc in self.scorings}})
                     res[pid] = r
                     continue
                 opp_vol = {k: shares[pid][k] * vol[k] for k in ("tgt", "car", "patt")}
                 envf = self.env_factor(team, line, team_pts)
                 qm = p["q_mult"] if st[pid] == "questionable" else 1.0
-                for sc in SCORINGS:
+                wind = (line.get("wind") or 0) if not line.get("dome") else 0
+                wm = max(0.6, 1 - p["wind_k"] * max(0.0, wind - p["wind_free"]))
+                for sc in self.scorings:
                     eff = self.efficiency(pid, pos, sc)
-                    raw = opp_vol["tgt"] * eff["rec"] + opp_vol["car"] * eff["rush"] + opp_vol["patt"] * eff["pass"]
+                    raw = opp_vol["tgt"] * eff["rec"] * wm + opp_vol["car"] * eff["rush"] + opp_vol["patt"] * eff["pass"] * wm
                     r[sc] = round(raw * self.def_factor(line.get("opp"), pos, sc) * envf * qm, 2)
                 r["opps"] = {k: round(v, 1) for k, v in opp_vol.items()}
                 r["share"] = {k: round(shares[pid][k], 3) for k in ("tgt", "car", "patt")}
@@ -331,7 +385,7 @@ class Projector:
             return None
         pos = games[0]["pos"]
         out = {"games": len(games)}
-        for sc in SCORINGS:
+        for sc in self.scorings:
             x = sum(sum(x_points(g, pos, sc)) for g in games) / len(games)
             a = sum(sum(comp_points(g, sc)) for g in games) / len(games)
             out["x_" + sc] = round(x, 1)

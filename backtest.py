@@ -91,7 +91,59 @@ def metrics(recs, method):
             "n_close": c_total}
 
 
+def grade_live(season, cur_week, rows):
+    """Grade the frozen pre-kickoff projections (data/live_log_<season>.json) against actual results."""
+    path = HERE / "data" / f"live_log_{season}.json"
+    if not path.exists():
+        return None, 0.0
+    log = json.loads(path.read_text())
+    actual = {(r["week"], r["pid"]): r for r in rows}
+    recs = []
+    for wk, ents in log.get("weeks", {}).items():
+        wk = int(wk)
+        if wk >= cur_week:
+            continue
+        for pid, e in ents.items():
+            a = actual.get((wk, pid))
+            if not a or not e.get("f"):
+                continue
+            rec = {"season": season, "week": wk, "pos": e["p"], "actual": a["pts_ppr"],
+                   "final": e["f"].get("ppr"), "sleeper": (e.get("s") or {}).get("ppr"),
+                   "model": (e.get("m") or {}).get("ppr"), "espn": (e.get("e") or {}).get("ppr")}
+            if rec["final"] is None or rec["sleeper"] is None or rec["model"] is None:
+                continue
+            if rec["espn"] is not None:
+                rec["final+espn"] = round(2 / 3 * rec["final"] + 1 / 3 * rec["espn"], 2)
+            if "lg" in e["f"] and "pts_lg" in a:
+                rec["actual_lg"], rec["final_lg"] = a["pts_lg"], e["f"]["lg"]
+            recs.append(rec)
+    if not recs:
+        return None, 0.0
+    weeks = sorted({r["week"] for r in recs})
+    out = {"weeks": weeks, "n": len(recs), "methods": {}}
+    for m in ("final", "sleeper", "model"):
+        out["methods"][m] = metrics(recs, m)
+    with_e = [r for r in recs if "final+espn" in r]
+    if with_e:
+        out["espn_subset"] = {m: metrics(with_e, m) for m in ("final", "espn", "final+espn")}
+    lg = [dict(r, actual=r["actual_lg"], final=r["final_lg"]) for r in recs if "actual_lg" in r]
+    if lg:
+        out["league_scoring_final"] = metrics(lg, "final")
+    w_espn = 0.0
+    es = out.get("espn_subset")
+    if es and len({r["week"] for r in with_e}) >= 3 and (es["final+espn"]["pairs"] or 0) > (es["final"]["pairs"] or 1) + 0.002:
+        w_espn = round(1 / 3, 3)
+    return out, w_espn
+
+
 def main():
+    cfg = {}
+    try:
+        cfg = json.loads((HERE / "config.json").read_text())
+        if cfg.get("league_id"):
+            ds.set_league_scoring(ds.fetch_league(cfg["league_id"])["scoring"])
+    except Exception as e:  # noqa: BLE001
+        print(f"League scoring unavailable ({e})")
     state = ds.fetch_json(ds.SLEEPER_STATE)
     season, cur_week = int(state["season"]), int(state["week"])
     print(f"Backtest. Current: {season} week {cur_week}")
@@ -104,10 +156,13 @@ def main():
         plan.append((season, list(range(3, cur_week))))
 
     recs = []
+    cur_rows = []
     for yr, weeks in plan:
         print(f"Season {yr}: loading")
         prior = ds.cached_season(yr - 1)
         rows = ds.cached_season(yr) if yr < season else [r for w in range(1, cur_week) for r in ds.sleeper_rows(yr, w)]
+        if yr == season:
+            cur_rows = rows
         projs = ds.cached_projections(yr, weeks)
         games = ds.nfl_games(yr)
         injuries = ds.nfl_injuries(yr)
@@ -129,6 +184,11 @@ def main():
                 summary["by_pos"].setdefault(pos, {})[m] = metrics(sub, m)
     best_blend = max(BLENDS, key=lambda w: summary["overall"][f"blend{int(w * 100)}"]["pairs"])
     summary["best_blend"] = best_blend
+    if not cur_rows:
+        cur_rows = [r for w in range(1, cur_week) for r in ds.sleeper_rows(season, w)]
+    live, w_espn = grade_live(season, cur_week, cur_rows)
+    summary["live"], summary["espn_weight"] = live, w_espn
+    print("live grading:", json.dumps(live)[:400] if live else "nothing logged yet", "| espn weight", w_espn)
 
     OUT_JSON.parent.mkdir(exist_ok=True)
     OUT_JSON.write_text(json.dumps(summary, indent=1))
@@ -185,7 +245,8 @@ input,select{background:var(--s1);border:1px solid var(--b2);color:var(--text);p
 <p class="note">Every week below was predicted using only what was known before kickoff: games already played, that week's Vegas lines, and that week's official injury report. "Start/sit calls right" takes every pair of players at the same position in the same week and checks whether the projection ranked them in the right order. "Close calls" are pairs Sleeper had within 3 points of each other, the decisions that actually keep you up at night. PPR scoring, players anyone would plausibly start.</p>
 <p class="note"><a href="diamond_scout_startsit.html">Back to the start/sit tool</a></p>
 <div class="cards" id="cards"></div>
-<h2>Overall</h2><div class="scroll"><table id="overall"></table></div>
+<h2>Live results (projections frozen before kickoff)</h2><div id="live"></div>
+<h2>Backtest: overall</h2><div class="scroll"><table id="overall"></table></div>
 <h2>By position</h2><div class="scroll" id="bypos"></div>
 <h2>Every player, every week</h2>
 <div class="controls"><input id="q" placeholder="Search player…"><select id="fs"></select><select id="fw"></select><select id="fp"><option value="">All pos</option><option>QB</option><option>RB</option><option>WR</option><option>TE</option></select></div>
@@ -209,6 +270,12 @@ function table(sum){
    ms.map(m=>`<tr class="${m===best?'best':''}"><td>${L[m]||m}${m===FINAL?' ★':''}</td><td>${pct(sum[m].pairs)}</td><td>${pct(sum[m].close)}</td><td>${sum[m].mae}</td><td>${sum[m].n}</td></tr>`).join('');
 }
 document.getElementById('overall').innerHTML=table(o);
+const LV=S.live;
+const LL={final:'Final projection (what the tool showed)',sleeper:'Sleeper',model:'Our model',espn:'ESPN','final+espn':'Final + ESPN'};
+document.getElementById('live').innerHTML=!LV?'<p class="note">Nothing graded yet. The tool saves every projection before kickoff starting this week; each Tuesday this section grades them against what actually happened.</p>':
+ `<p class="note">Weeks graded: ${LV.weeks.join(', ')} · ${LV.n} player-weeks.${S.espn_weight?` ESPN has earned a spot in the blend (${Math.round(S.espn_weight*100)}%).`:' ESPN joins the blend only after 3+ graded weeks show it helps.'}${LV.league_scoring_final?` In your league's scoring: ${pct(LV.league_scoring_final.pairs)} of start/sit calls right.`:''}</p>`+
+ '<div class="scroll"><table>'+'<tr><th>Method</th><th>Start/sit calls right</th><th>Close calls right</th><th>Avg miss (pts)</th><th>Player-weeks</th></tr>'+
+ Object.entries(LV.methods).concat(LV.espn_subset?Object.entries(LV.espn_subset).filter(([k])=>k!=='final').map(([k,v])=>[k+' ',v]):[]).map(([m,v])=>`<tr><td>${LL[m.trim()]||m}${m.endsWith(' ')?' (games ESPN covered)':''}</td><td>${pct(v.pairs)}</td><td>${pct(v.close)}</td><td>${v.mae}</td><td>${v.n}</td></tr>`).join('')+'</table></div>';
 document.getElementById('bypos').innerHTML=Object.entries(S.by_pos).map(([p,s])=>`<h2 style="font-size:.9rem;color:var(--text)">${p}</h2><table>${table(s)}</table>`).join('');
 const seasons=[...new Set(ROWS.map(r=>r[0]))], weeks=[...new Set(ROWS.map(r=>r[1]))].sort((a,b)=>b-a);
 document.getElementById('fs').innerHTML='<option value="">All seasons</option>'+seasons.map(s=>`<option>${s}</option>`).join('');

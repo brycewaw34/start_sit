@@ -32,6 +32,8 @@ import model
 HERE = Path(__file__).resolve().parent
 HTML_FILE = HERE / "diamond_scout_startsit.html"
 SUMMARY = HERE / "data" / "backtest_summary.json"
+CONFIG = HERE / "config.json"
+LIVE_LOG = HERE / "data" / "live_log_{season}.json"
 
 LAST_N = 3
 DEF_WEEKS = 4
@@ -78,6 +80,36 @@ def model_weight():
         return float(json.loads(SUMMARY.read_text())["best_blend"])
     except Exception:  # noqa: BLE001
         return DEFAULT_MODEL_WEIGHT
+
+
+def espn_weight():
+    """ESPN only joins the blend once the live log shows it actually helps."""
+    try:
+        return float(json.loads(SUMMARY.read_text()).get("espn_weight", 0))
+    except Exception:  # noqa: BLE001
+        return 0.0
+
+
+def load_config():
+    try:
+        return json.loads(CONFIG.read_text())
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+def save_live_log(season, week, players, lines):
+    """Freeze each player's projections before his game kicks off, for honest grading later."""
+    path = Path(str(LIVE_LOG).format(season=season))
+    log = json.loads(path.read_text()) if path.exists() else {"season": season, "weeks": {}}
+    wk = log["weeks"].setdefault(str(week), {})
+    for e in players:
+        ln = lines.get(e["t"]) or {}
+        if ln.get("state", "pre") != "pre" or not e.get("pj") or (e["pj"].get("ppr") or 0) < 3:
+            continue
+        wk[e["id"]] = {"t": e["t"], "p": e["p"], "f": e["pj"], "s": e.get("ps"), "m": e.get("pm"), "e": e.get("pe")}
+    path.parent.mkdir(exist_ok=True)
+    path.write_text(json.dumps(log, separators=(",", ":")))
+    return len(wk)
 
 
 # ── LINES (ESPN, falls back to nflverse) ────────────────────────────────────
@@ -152,13 +184,15 @@ def recent_stats(games, pos):
         "ppr": r1(sum(g["pts_ppr"] for g in recent) / n),
         "half": r1(sum(g["pts_half"] for g in recent) / n),
         "std": r1(sum(g["pts_std"] for g in recent) / n),
+        **({"lg": r1(sum(g.get("pts_lg", 0) for g in recent) / n)} if "pts_lg" in recent[0] else {}),
     }
 
 
 def def_ranks(rows, weeks):
     use = set(sorted(weeks)[-DEF_WEEKS:])
     out = {}
-    for sc in model.SCORINGS:
+    scs = model.SCORINGS + (("lg",) if rows and "pts_lg" in rows[0] else ())
+    for sc in scs:
         out[sc] = {}
         for pos in ds.POSITIONS:
             per = {}
@@ -182,6 +216,15 @@ def main():
 
     text, prev = read_page()
     prev_meta = prev.get("META") or {}
+    cfg = load_config()
+    league = None
+    if cfg.get("league_id"):
+        try:
+            league = ds.fetch_league(cfg["league_id"])
+            ds.set_league_scoring(league["scoring"])
+            print(f"League: {league['name']} ({len(league['teams'])} teams)")
+        except Exception as e:  # noqa: BLE001
+            print(f"WARNING: league unavailable ({e}); standard scoring only")
 
     print("Step 1: current week")
     state = ds.fetch_json(ds.SLEEPER_STATE)
@@ -221,6 +264,12 @@ def main():
         lines, source = ds.lines_from_games(games, week), "nflverse"
     if not lines and games:
         lines, source = ds.lines_from_games(games, week), "nflverse"
+    try:
+        ds.add_weather(lines, week, ds.roofs_from_games(season))
+        windy = sorted({t for t, l in lines.items() if (l.get("wind") or 0) >= 15})
+        print(f"  weather added; windy (15+ mph): {', '.join(windy) or 'none'}")
+    except Exception as e:  # noqa: BLE001
+        print(f"  WARNING: weather unavailable ({e})")
     byes = sorted(t for t in ALL_TEAMS if t not in lines)
     team_pts = ds.team_points(games, week)
     print(f"  {len(lines) // 2} games, byes: {', '.join(byes) or 'none'}")
@@ -232,15 +281,21 @@ def main():
             players_in[pid] = {"pos": p["position"], "team": ds.team_code(p["team"]),
                                "status": (p.get("injury_status") or "").lower(),
                                "depth": p.get("depth_chart_order")}
-    P = model.Projector(rows, season, week, prior_rows=prior)
+    P = model.Projector(rows, season, week, prior_rows=prior, league=bool(ds.LEAGUE_SCORING))
+    scorings = P.scorings
     proj = P.project(players_in, lines, team_pts)
     try:
         sleeper_proj = ds.sleeper_projections(season, week)
     except Exception as e:  # noqa: BLE001
         print(f"  WARNING: Sleeper projections unavailable ({e}); model only")
         sleeper_proj = {}
-    w_model = model_weight()
-    print(f"  model weight {w_model}, Sleeper projections for {len(sleeper_proj)} players")
+    try:
+        espn_proj = ds.espn_projections(season, week, db)
+    except Exception as e:  # noqa: BLE001
+        print(f"  WARNING: ESPN projections unavailable ({e})")
+        espn_proj = {}
+    w_model, w_espn = model_weight(), espn_weight()
+    print(f"  model weight {w_model}, ESPN weight {w_espn}, Sleeper projections for {len(sleeper_proj)}, ESPN for {len(espn_proj)}")
 
     print("Step 6: Next Gen Stats")
     ngs = {}
@@ -279,19 +334,25 @@ def main():
         pr = proj.get(pid) or {}
         sp = sleeper_proj.get(pid)
         if pr.get("bye") or pr.get("out"):
-            e["pj"] = {"ppr": 0, "half": 0, "std": 0}
+            e["pj"] = {sc: 0 for sc in scorings}
         else:
+            ep = espn_proj.get(pid)
             final = {}
-            for sc in model.SCORINGS:
+            for sc in scorings:
                 m = pr.get(sc)
                 if m is None:
                     continue
-                final[sc] = round(w_model * m + (1 - w_model) * sp[sc], 1) if sp else round(m, 1)
+                v = w_model * m + (1 - w_model) * sp[sc] if sp and sc in sp else m
+                if ep and w_espn and sc in ep:
+                    v = (1 - w_espn) * v + w_espn * ep[sc]
+                final[sc] = round(v, 1)
             if final:
                 e["pj"] = final
-                e["pm"] = {sc: round(pr[sc], 1) for sc in model.SCORINGS}
+                e["pm"] = {sc: round(pr[sc], 1) for sc in scorings}
             if sp:
-                e["ps"] = {sc: round(sp[sc], 1) for sc in model.SCORINGS}
+                e["ps"] = {sc: round(sp[sc], 1) for sc in scorings if sc in sp}
+            if ep:
+                e["pe"] = {sc: round(ep[sc], 1) for sc in scorings if sc in ep}
             if pr.get("opps"):
                 e["op"] = pr["opps"]
                 e["sh"] = pr["share"]
@@ -303,11 +364,16 @@ def main():
                     e["bo"] = [[name(src), v] for src, v in pr["boost"]]
         lk = P.luck(pid)
         if lk:
-            e["xp"] = {sc: lk["x_" + sc] for sc in model.SCORINGS}
+            e["xp"] = {sc: lk["x_" + sc] for sc in scorings}
         if pid in ngs:
             e["ngs"] = ngs[pid]
         players.append(e)
     players.sort(key=lambda e: (e["t"], ds.POSITIONS.index(e["p"]), -((e.get("pj") or {}).get("ppr") or 0)))
+    try:
+        n_logged = save_live_log(season, week, players, lines)
+        print(f"  live log: {n_logged} pre-kickoff projections saved for week {week}")
+    except Exception as e:  # noqa: BLE001
+        print(f"  WARNING: live log not saved ({e})")
     with_proj = sum(1 for e in players if (e.get("pj") or {}).get("ppr"))
     print(f"  {len(players)} players listed, {with_proj} with projections")
     if completed and with_proj < 150:
@@ -326,14 +392,20 @@ def main():
         "window": f"L{LAST_N}",
         "statsNote": f"Last {LAST_N} games played ({week_range(stat_weeks)})" if stat_weeks else "No games played yet",
         "defNote": f"Fantasy pts allowed per game, {week_range(def_weeks)}" if def_weeks else "",
-        "linesSource": source, "modelWeight": w_model, "accuracy": acc,
+        "linesSource": source, "modelWeight": w_model, "espnWeight": w_espn, "accuracy": acc,
+        "hasEspn": bool(espn_proj),
     }
+    league_out = None
+    if league:
+        league_out = {"id": league["id"], "name": league["name"], "positions": league["positions"],
+                      "teams": league["teams"], "me": cfg.get("my_team_owner", "")}
     block = "\n".join([
         DATA_START, "// Auto-generated by update_stats.py. Edits here get overwritten.",
         "const META=" + json.dumps(meta, separators=(",", ":")) + ";",
         "const LINES=" + json.dumps(lines, separators=(",", ":"), sort_keys=True) + ";",
         "const BYES=" + json.dumps(byes) + ";",
         "const DEF=" + json.dumps(defs, separators=(",", ":"), sort_keys=True) + ";",
+        "const LEAGUE=" + json.dumps(league_out, separators=(",", ":")) + ";",
         "const PLAYERS=[\n" + ",\n".join(json.dumps(e, separators=(",", ":")) for e in players) + "\n];",
         DATA_END])
     before, rest = text.split(DATA_START, 1)
