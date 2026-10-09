@@ -384,11 +384,13 @@ def espn_projections(season, week, db):
 
 # ── WEATHER ──────────────────────────────────────────────────────────────────
 
-STADIUMS = {  # home team -> (lat, lon) of an open-air or retractable stadium
-    "ARI": (33.5276, -112.2626), "BAL": (39.2780, -76.6227), "BUF": (42.7738, -78.7870),
+# Domes and retractable roofs (ARI, ATL, DAL, DET, HOU, IND, LAC, LAR, LV, MIN, NO) are treated as covered.
+COVERED = {"ARI", "ATL", "DAL", "DET", "HOU", "IND", "LAC", "LAR", "LV", "MIN", "NO"}
+STADIUMS = {  # home team -> (lat, lon) of an open-air stadium
+    "BAL": (39.2780, -76.6227), "BUF": (42.7738, -78.7870),
     "CAR": (35.2258, -80.8528), "CHI": (41.8623, -87.6167), "CIN": (39.0955, -84.5161),
-    "CLE": (41.5061, -81.6995), "DAL": (32.7473, -97.0945), "DEN": (39.7439, -105.0201),
-    "GB": (44.5013, -88.0622), "HOU": (29.6847, -95.4107), "IND": (39.7601, -86.1639),
+    "CLE": (41.5061, -81.6995), "DEN": (39.7439, -105.0201),
+    "GB": (44.5013, -88.0622),
     "JAX": (30.3239, -81.6373), "KC": (39.0489, -94.4839), "MIA": (25.9580, -80.2389),
     "NE": (42.0909, -71.2643), "NYG": (40.8135, -74.0745), "NYJ": (40.8135, -74.0745),
     "PHI": (39.9008, -75.1675), "PIT": (40.4468, -80.0158), "SEA": (47.5952, -122.3316),
@@ -416,7 +418,7 @@ def add_weather(lines, week, roofs):
     for team, ln in lines.items():
         home = team if ln.get("home") else ln.get("opp")
         roof = roofs.get((week, home), "")
-        if roof in ("dome", "closed"):
+        if roof in ("dome", "closed") or (home in COVERED and roof != "outdoors"):
             ln["dome"] = True
             continue
         if home not in STADIUMS or not ln.get("kick"):
