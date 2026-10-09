@@ -272,6 +272,12 @@ def main():
         lines, source = ds.lines_from_games(schedule, week), "nflverse"
     if not lines and schedule:
         lines, source = ds.lines_from_games(schedule, week), "nflverse"
+    # games whose odds ESPN already dropped (kicked off): fall back to the closing line from nflverse
+    nfl_lines = ds.lines_from_games(schedule, week) if schedule else {}
+    for team, ln in lines.items():
+        nl = nfl_lines.get(team)
+        if ln.get("spread") is None and nl and nl.get("opp") == ln.get("opp"):
+            ln.update({k: nl[k] for k in ("impl", "total", "spread")})
     try:
         ds.add_weather(lines, week, ds.roofs_from_games(season))
         windy = sorted({t for t, l in lines.items() if (l.get("wind") or 0) >= 15})
