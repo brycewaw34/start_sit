@@ -3,25 +3,29 @@ name: Update Diamond Scout data
 on:
   schedule:
     - cron: "0 13 * * *"    # every day, ~6am Pacific: new stats, injuries, lines
-    - cron: "0 16 * * 0"    # Sunday ~9am Pacific: final injury news before kickoff
+    - cron: "0 16 * * 0"    # Sunday ~9am Pacific: early-game inactives are out
+    - cron: "30 19 * * 0"   # Sunday ~12:30pm Pacific: late-game inactives
   workflow_dispatch:         # "Run workflow" button for a manual refresh
   push:                      # run right away when the script or workflow changes
     branches: [main]
     paths:
       - update_stats.py
+      - model.py
+      - datasrc.py
+      - diamond_scout_startsit.html
       - .github/workflows/update.yml
 
 permissions:
   contents: write
 
 concurrency:
-  group: update-data
+  group: repo-writes
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -36,10 +40,7 @@ jobs:
         run: |
           git config user.name "diamond-scout-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add diamond_scout_startsit.html
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git commit -m "Auto-update data $(date -u +%Y-%m-%d)"
-            git push
-          fi
+          git add diamond_scout_startsit.html data/
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "Auto-update data $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done

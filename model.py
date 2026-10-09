@@ -55,6 +55,7 @@ PARAMS = {  # tuned on 2024, validated on 2025 (see backtest)
     "env_weight": 0.5,            # how hard implied points vs normal bites
     "env_prior": 3.0,             # games of league-average scoring mixed in
     "q_mult": 0.93,               # questionable players
+    "vac_redistribute": 0.8,      # share of a missing player's work that goes to known teammates
 }
 
 OUT_STATUSES = {"out", "ir", "pup", "sus", "na", "dnr", "cov", "doubtful"}
@@ -251,23 +252,24 @@ class Projector:
             out = {pid for pid in pids if st[pid] in OUT_STATUSES}
             avail = [pid for pid in pids if pid not in out]
             shares = {pid: {k: (base[pid][k] if base[pid] else 0.0) for k in ("tgt", "car", "patt")} for pid in pids}
-            boost = defaultdict(lambda: defaultdict(float))  # pid -> source -> share gained
+            boost = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))  # pid -> source -> type -> gain
 
             for k in ("tgt", "car", "patt"):
                 for o in out:
                     if not base[o]:
                         continue
-                    vac = base[o][k] * base[o]["presence"]
+                    vac = base[o][k] * base[o]["presence"] * (1.0 if players[o]["pos"] == "QB" else p["vac_redistribute"])
                     if vac <= 0.005:
                         continue
                     pos = players[o]["pos"]
-                    same_frac = 1.0 if k == "patt" else p["same_pos_share"]
+                    qb = pos == "QB"  # a missing QB's whole role (passing and running) goes to the next QB
+                    same_frac = 1.0 if (k == "patt" or qb) else p["same_pos_share"]
                     same = [a for a in avail if players[a]["pos"] == pos]
                     same_tot = sum(shares[a][k] for a in same)
-                    if same and same_tot <= 0 and k == "patt":
+                    if same and same_tot <= 0 and (k == "patt" or qb):
                         # backup QB with no history: next on the depth chart takes over
                         nxt = min(same, key=lambda a: players[a].get("depth") or 99)
-                        shares[nxt][k] += vac; boost[nxt][o] += vac
+                        shares[nxt][k] += vac; boost[nxt][o][k] += vac
                         continue
                     targets = [(same, vac * same_frac, same_tot), (avail, vac * (1 - same_frac), sum(shares[a][k] for a in avail))]
                     if not same or same_tot <= 0:
@@ -278,8 +280,7 @@ class Projector:
                         gains = {a: amount * shares[a][k] / tot for a in group}
                         for a, gval in gains.items():
                             shares[a][k] += gval
-                            if k != "patt" or players[a]["pos"] == "QB":
-                                boost[a][o] += gval
+                            boost[a][o][k] += gval
                 total = sum(shares[a][k] for a in avail)
                 if total > 1.0:
                     for a in avail:
@@ -309,7 +310,8 @@ class Projector:
                 r["share"] = {k: round(shares[pid][k], 3) for k in ("tgt", "car", "patt")}
                 r["base_share"] = {k: round(base[pid][k], 3) for k in ("tgt", "car", "patt")} if base[pid] else None
                 r["trend"] = round(base[pid]["trend"], 3) if base[pid] and base[pid]["trend"] is not None else None
-                gains = sorted(((s, v) for s, v in boost[pid].items() if v > 0.01), key=lambda x: -x[1])
+                main = "patt" if pos == "QB" else ("car" if pos == "RB" else "tgt")
+                gains = sorted(((s, v[main]) for s, v in boost[pid].items() if v[main] > 0.01), key=lambda x: -x[1])
                 r["boost"] = [(s, round(v, 3)) for s, v in gains[:3]]
                 r["def_f"] = round(self.def_factor(line.get("opp"), pos, "ppr"), 3)
                 r["env_f"] = round(envf, 3)
