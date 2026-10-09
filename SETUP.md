@@ -68,7 +68,7 @@ Either tell Claude "the repo is created" and it will push the files for you, or 
 - Win chances for every game from the Vegas spread (fit on 2021-2025; as accurate as moneylines).
 - Set how many people are in your pool and your goal: **Most wins** (every favorite), **Balanced**
   (only cheap upset picks, max 2), or **Win the week** (simulates your pool to find upsets worth taking).
-- Upset picks only pay off in bigger pools. In a ~10-person pool the page will usually say take all favorites.
+- Upset picks only pay off in bigger pools. The page defaults to your 20-person pool; at ~10 people it usually says take all favorites.
 - Key injuries, weather, live scores, the tiebreaker total, and a season record of how favorites have done.
 - Updated by the same daily run as the start/sit page. Linked from the start/sit header.
 

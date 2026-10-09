@@ -30,9 +30,9 @@ Start/sit projections
 - Page also shows: best lineup for my team vs my current Sleeper lineup, floor/ceiling (20th-80th percentile), roster tags (MINE / FA / other team), weather, Next Gen Stats.
 
 Pick'em
-- My pool: straight-up winners, no confidence points, weekly and season prizes, small group run by text.
+- My pool: straight-up winners, no confidence points, weekly and season prizes, 20 people, run by text.
 - Win probability = Phi(-spread / 11.25), fit on 2021-2025 (as accurate as moneylines).
-- The page simulates the week against my pool size to find upset picks worth taking. Modes: Most wins, Balanced (max 2 cheap upsets), Win the week. In a small pool, upsets rarely help.
+- The page simulates the week against my pool size to find upset picks worth taking. Modes: Most wins, Balanced (max 2 cheap upsets), Win the week. In a 20-person pool, a couple of cheap upsets per week help a little; in pools of 10 or fewer they rarely do.
 
 Files
 - diamond_scout_startsit.html, picks.html, backtest.html: the pages

@@ -91,7 +91,7 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
 <div class="app">
   <div class="controls">
     <span class="lbl">People in your pool</span>
-    <input class="num" id="n-players" type="number" min="2" max="200" value="10" inputmode="numeric">
+    <input class="num" id="n-players" type="number" min="2" max="200" value="20" inputmode="numeric">
     <span class="lbl" style="margin-left:6px">Goal</span>
     <div class="seg" id="goal">
       <button data-g="wins">Most wins</button>
@@ -132,7 +132,7 @@ const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},s
 const PUBLIC_K=2.5;   // how strongly a typical pool piles onto favorites
 const SIMS=20000;
 
-let nPlayers=+(store.get('pk-n')||10);
+let nPlayers=+(store.get('pk-n')||20);
 let goal=store.get('pk-goal')||'balanced';
 const override={};      // game index -> 'home'|'away'
 let wk=String(PICK.week);
@@ -287,7 +287,7 @@ function render(){
 function saveOverride(){store.set('pk-override',JSON.stringify({week:wk,picks:override}));}
 
 function recompute(){buildSim(); OPT=SIM.open.length?optimize():null; render();}
-$('n-players').addEventListener('change',e=>{nPlayers=Math.max(2,Math.min(200,+e.target.value||10));store.set('pk-n',String(nPlayers));recompute();});
+$('n-players').addEventListener('change',e=>{nPlayers=Math.max(2,Math.min(200,+e.target.value||20));store.set('pk-n',String(nPlayers));recompute();});
 document.querySelectorAll('#goal button').forEach(b=>b.addEventListener('click',()=>{goal=b.dataset.g;store.set('pk-goal',goal);for(const k in override)delete override[k];saveOverride();recompute();}));
 recompute();
 </script>
