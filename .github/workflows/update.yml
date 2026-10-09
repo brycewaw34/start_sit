@@ -1,0 +1,40 @@
+name: Update Diamond Scout data
+
+on:
+  schedule:
+    - cron: "0 13 * * *"    # every day, ~6am Pacific: new stats, injuries, lines
+    - cron: "0 16 * * 0"    # Sunday ~9am Pacific: final injury news before kickoff
+  workflow_dispatch:         # "Run workflow" button for a manual refresh
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull latest Sleeper stats and Vegas lines
+        run: python update_stats.py
+
+      - name: Save changes
+        run: |
+          git config user.name "diamond-scout-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add diamond_scout_startsit.html
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Auto-update data $(date -u +%Y-%m-%d)"
+            git push
+          fi
