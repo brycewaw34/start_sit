@@ -5,6 +5,11 @@ on:
     - cron: "0 13 * * *"    # every day, ~6am Pacific: new stats, injuries, lines
     - cron: "0 16 * * 0"    # Sunday ~9am Pacific: final injury news before kickoff
   workflow_dispatch:         # "Run workflow" button for a manual refresh
+  push:                      # run right away when the script or workflow changes
+    branches: [main]
+    paths:
+      - update_stats.py
+      - .github/workflows/update.yml
 
 permissions:
   contents: write
