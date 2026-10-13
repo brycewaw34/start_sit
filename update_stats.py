@@ -125,6 +125,57 @@ def parse_details(details):
     return None, None
 
 
+def _num_line(s):
+    """'+2.5' / '-3' / 'o40.5' / 'EVEN' -> float or None."""
+    if s in (None, ""):
+        return None
+    s = str(s).strip().lower().lstrip("ou")
+    if s in ("even", "pk", "pick"):
+        return 0.0
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _ml_prob(ml):
+    """American odds string -> implied probability (with the book's cut still in)."""
+    try:
+        m = float(str(ml).replace("+", ""))
+    except (TypeError, ValueError):
+        return None
+    if str(ml).upper() == "EVEN":
+        m = 100.0
+    return -m / (-m + 100) if m < 0 else 100 / (m + 100)
+
+
+def market_info(odds, side):
+    """Opening vs current spread, moneyline and total for one side ('home'/'away')."""
+    other = "away" if side == "home" else "home"
+    ps, ml, tot = odds.get("pointSpread") or {}, odds.get("moneyline") or {}, odds.get("total") or {}
+    out = {}
+    so, sc = _num_line(((ps.get(side) or {}).get("open") or {}).get("line")), _num_line(((ps.get(side) or {}).get("close") or {}).get("line"))
+    if so is not None:
+        out["spread_open"] = so
+    if sc is not None:
+        out["spread_now"] = sc
+    for key, when in (("ml_open", "open"), ("ml", "close")):
+        mine = ((ml.get(side) or {}).get(when) or {}).get("odds")
+        theirs = ((ml.get(other) or {}).get(when) or {}).get("odds")
+        pm, pt = _ml_prob(mine), _ml_prob(theirs)
+        if mine:
+            out[key] = mine
+        if pm and pt:
+            out[key + "_p"] = round(pm / (pm + pt), 4)  # cut removed
+    to, tc = _num_line(((tot.get("over") or {}).get("open") or {}).get("line")), _num_line(((tot.get("over") or {}).get("close") or {}).get("line"))
+    if to is not None:
+        out["total_open"] = to
+    fo = (odds.get(f"{side}TeamOdds") or {}).get("favoriteAtOpen")
+    if fo is not None:
+        out["fav_open"] = bool(fo)
+    return out
+
+
 def espn_lines(season, week, prev_lines, prev_week):
     data = ds.fetch_json(ESPN_SCOREBOARD.format(season=season, week=week))
     lines = {}
@@ -135,6 +186,18 @@ def espn_lines(season, week, prev_lines, prev_week):
         names = {c.get("homeAway"): ((c.get("team") or {}).get("shortDisplayName") or (c.get("team") or {}).get("name") or "")
                  for c in comp.get("competitors", [])}
         scores = {c.get("homeAway"): c.get("score") for c in comp.get("competitors", [])}
+        recs = {}
+        for c in comp.get("competitors", []):
+            r = {}
+            for rec in c.get("records") or []:
+                nm = (rec.get("name") or rec.get("type") or "").lower()
+                if nm in ("overall", "total", "ytd"):
+                    r["all"] = rec.get("summary")
+                elif "home" in nm:
+                    r["home"] = rec.get("summary")
+                elif "road" in nm or "away" in nm:
+                    r["road"] = rec.get("summary")
+            recs[c.get("homeAway")] = r
         home, away = teams.get("home"), teams.get("away")
         if not home or not away:
             continue
@@ -146,7 +209,9 @@ def espn_lines(season, week, prev_lines, prev_week):
         fav, line = parse_details(odds.get("details"))
         for team, opp, is_home in ((home, away, True), (away, home, False)):
             e = {"opp": opp, "home": is_home, "state": state, "kick": kick, "impl": None, "total": None, "spread": None,
-                 "name": names.get("home" if is_home else "away", "")}
+                 "name": names.get("home" if is_home else "away", ""),
+                 "rec": recs.get("home" if is_home else "away") or None}
+            e.update(market_info(odds, "home" if is_home else "away"))
             if state != "pre":
                 mine, theirs = scores.get("home" if is_home else "away"), scores.get("away" if is_home else "home")
                 if mine not in (None, "") and theirs not in (None, ""):
@@ -164,6 +229,7 @@ def espn_lines(season, week, prev_lines, prev_week):
                 old = (prev_lines or {}).get(team) if prev_week == week else None
                 if old and old.get("opp") == opp and old.get("impl") is not None:
                     e.update({k: old[k] for k in ("impl", "total", "spread")})
+                    e.update({k: v for k, v in old.items() if k in ("spread_open", "spread_now", "ml", "ml_p", "ml_open", "ml_open_p", "total_open", "fav_open") and k not in e})
             lines[team] = e
     return lines
 

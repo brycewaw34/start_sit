@@ -258,6 +258,9 @@ def nfl_games(season):
             "total_line": num(g["total_line"]) if g.get("total_line") not in ("", "NA", None) else None,
             "home_score": num(g["home_score"]) if g.get("home_score") not in ("", "NA", None) else None,
             "away_score": num(g["away_score"]) if g.get("away_score") not in ("", "NA", None) else None,
+            "home_rest": int(num(g["home_rest"])) if g.get("home_rest") not in ("", "NA", None) else None,
+            "away_rest": int(num(g["away_rest"])) if g.get("away_rest") not in ("", "NA", None) else None,
+            "div": g.get("div_game") == "1",
         })
     return out
 

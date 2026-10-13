@@ -79,6 +79,17 @@ def build(season, week, lines, byes, games, players, updated):
             g["p_home"] = round(raw, 4)
         if "score" in ln:
             g["score_home"], g["score_away"] = ln["score"], ln.get("opp_score")
+        # market detail: opening vs current lines (home side), moneyline win chance, records, rest
+        for k in ("spread_open", "ml", "ml_p", "ml_open", "ml_open_p", "total_open", "fav_open"):
+            if ln.get(k) is not None:
+                g["m_" + k] = ln[k]
+        if ln.get("rec"):
+            g["rec_home"] = ln["rec"]
+        if al.get("rec"):
+            g["rec_away"] = al["rec"]
+        sched = next((s for s in games if s["week"] == week and s["home"] == team), None)
+        if sched:
+            g["rest_home"], g["rest_away"], g["div"] = sched.get("home_rest"), sched.get("away_rest"), sched.get("div")
         week_games.append(g)
     week_games.sort(key=lambda g: (g.get("kick") or "", g["home"]))
 

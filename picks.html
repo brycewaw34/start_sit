@@ -62,6 +62,7 @@ a{color:var(--gold);text-decoration:none}
 .chip.bad{color:var(--red);border-color:rgba(241,107,107,.35)}
 .chip.good{color:var(--green);border-color:rgba(61,214,140,.35)}
 .chip.edge{color:#b48eff;border-color:rgba(180,142,255,.45)}
+.chip.move{color:var(--teal);border-color:rgba(45,212,191,.45)}
 .final .tname{opacity:.8}
 
 h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:28px 0 10px}
@@ -116,6 +117,7 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
     <p><strong>Win the week</strong> simulates your week thousands of times against the rest of your pool, assuming most people take favorites (and big favorites almost unanimously). If everyone has the same picks, nobody gains ground. Taking an underdog in a near coin-flip game costs you very little in expected wins but gives you a real chance to jump the field when it hits. The page only suggests flips that raise your odds of winning the week.</p>
     <p><strong>Edge spots.</strong> On 2006-2026 games, two kinds of underdogs beat their moneyline odds in both halves of the data: early-season dogs (weeks 1-4, about +2.8%) and dogs in low-scoring games (total 40 or under, about +2.9%), with bigger edges when they're small underdogs (+3 or less). Those dogs get a boost at half that size, since some of it is surely luck, and are tagged EDGE. The simulator uses the boosted chances, so it prefers edge-spot underdogs when picking upsets. Your pool is still assumed to pick off the raw Vegas line.</p>
     <p><strong>Balanced</strong> takes only the cheap flips: games where the underdog has at least a 40% chance, max two per week. A good default when there are both weekly and season prizes.</p>
+    <p><strong>Following the money.</strong> Win chances come from the current Vegas line, which already moves when sharp money comes in, so late money is baked in. Each game also shows where the line opened vs now, the moneyline win chance as a cross-check, and a BIG MOVE tag when the spread moved 1.5+ points or the favorite flipped. Records, byes, short weeks and division games are shown for context; Vegas prices those in too, so they don't change the numbers. Make your picks as close to kickoff as your pool allows.</p>
     <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 1,423 real picks in your CBS pool (weeks 1-5). Your group piles onto big favorites but often fades close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5). When that happens, the favorite is the contrarian pick.</p>
     <p>Tap any team to override a pick. Injury tags and wind are shown for context; Vegas lines already move for big news, so they aren't added on top.</p>
   </div>
@@ -274,6 +276,30 @@ function render(){
     if(g.open&&g.fav) meta.push(`<span class="chip">~${pct(g.pub)} of pool on ${esc(teamSide(g,g.fav).abbr)}</span>`);
     if(pick) meta.push(`<span class="chip ${flip?'dog':'pick'}">PICK: ${esc(teamSide(g,pick).name)}${flip?' (upset)':''}</span>`);
     [...g.inj_away.map(x=>[g.away,x]),...g.inj_home.map(x=>[g.home,x])].forEach(([t,x])=>meta.push(`<span class="chip ${x.s==='Out'?'bad':'warn'}">${esc(t)} ${esc(x.p)} ${esc(x.n)}: ${esc(x.s)}</span>`));
+    // ── market detail ──
+    const sOpen=g.m_spread_open, sNow=g.spread;   // home-side spread (negative = home favored)
+    if(sOpen!=null&&sNow!=null){
+      const fmt=v=>v===0?'PK':(v<0?`${esc(g.home)} -${Math.abs(v)}`:`${esc(g.away)} -${Math.abs(v)}`);
+      const moved=sNow-sOpen, big=Math.abs(moved)>=1.5||Math.sign(sOpen)!==Math.sign(sNow)&&sOpen!==0&&sNow!==0;
+      if(moved!==0){
+        const toward=moved<0?g.home:g.away;
+        meta.push(`<span class="chip ${big?'move':''}">${big?'BIG MOVE: ':'Line: '}${fmt(sOpen)} → ${fmt(sNow)} (money on ${esc(toward)})</span>`);
+      } else meta.push(`Line hasn't moved since open (${fmt(sNow)})`);
+    }
+    if(g.m_ml_p!=null){
+      const ph=g.m_ml_p, prev=g.m_ml_open_p;
+      let t=`Moneyline: ${esc(g.home)} ${esc(g.m_ml||'')} → ${Math.round(ph*100)}% to win`;
+      if(prev!=null&&Math.abs(ph-prev)>=0.02) t+=` (was ${Math.round(prev*100)}%)`;
+      meta.push(t);
+    }
+    if(g.m_total_open!=null&&g.total!=null&&g.m_total_open!==g.total) meta.push(`Total ${g.m_total_open} → ${g.total}`);
+    if(g.rec_away||g.rec_home){
+      const r=(t,x,where)=>x?`${esc(t)} ${esc(x.all||'')}${x[where]?` (${esc(x[where])} ${where})`:''}`:'';
+      meta.push([r(g.away,g.rec_away,'road'),r(g.home,g.rec_home,'home')].filter(Boolean).join(' · '));
+    }
+    const restNote=(t,d)=>d==null?null:d>=13?`${esc(t)} off a bye`:d<=5?`${esc(t)} on a short week`:null;
+    [restNote(g.away,g.rest_away),restNote(g.home,g.rest_home)].filter(Boolean).forEach(x=>meta.push(`<span class="chip">${x}</span>`));
+    if(g.div) meta.push('division game');
     if(g.edge){const e=teamSide(g,g.edge.side); meta.push(`<span class="chip edge">EDGE: ${esc(e.abbr)} +${(g.edge.adj*100).toFixed(1)}% (${esc(g.edge.why.join(', '))})</span>`);}
     if(g.dome) meta.push('dome');
     else if(g.wind!=null) meta.push(`<span class="${g.wind>=15?'chip warn':''}">${Math.round(g.wind)} mph wind${g.rain>=1?', rain':''}${g.temp!=null?`, ${g.temp}°F`:''}</span>`);
