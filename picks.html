@@ -116,6 +116,7 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
     <p><strong>Win the week</strong> simulates your week thousands of times against the rest of your pool, assuming most people take favorites (and big favorites almost unanimously). If everyone has the same picks, nobody gains ground. Taking an underdog in a near coin-flip game costs you very little in expected wins but gives you a real chance to jump the field when it hits. The page only suggests flips that raise your odds of winning the week.</p>
     <p><strong>Edge spots.</strong> On 2006-2026 games, two kinds of underdogs beat their moneyline odds in both halves of the data: early-season dogs (weeks 1-4, about +2.8%) and dogs in low-scoring games (total 40 or under, about +2.9%), with bigger edges when they're small underdogs (+3 or less). Those dogs get a boost at half that size, since some of it is surely luck, and are tagged EDGE. The simulator uses the boosted chances, so it prefers edge-spot underdogs when picking upsets. Your pool is still assumed to pick off the raw Vegas line.</p>
     <p><strong>Balanced</strong> takes only the cheap flips: games where the underdog has at least a 40% chance, max two per week. A good default when there are both weekly and season prizes.</p>
+    <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 716 real picks in your CBS pool (weeks 3-5). Your group piles onto big favorites but often fades close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5). When that happens, the favorite is the contrarian pick.</p>
     <p>Tap any team to override a pick. Injury tags and wind are shown for context; Vegas lines already move for big news, so they aren't added on top.</p>
   </div>
 </div>
@@ -131,7 +132,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const pct=v=>Math.round(v*100)+'%';
 const pct1=v=>v<0.2?(Math.round(v*1000)/10).toFixed(1)+'%':pct(v);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
-const PUBLIC_K=2.5;   // how strongly a typical pool piles onto favorites
+// How YOUR pool picks, fit on 716 real picks from weeks 3-5 (CBS grid):
+// share on favorite = sigmoid(2.75 * logit(win chance) - 0.80 if the favorite is at home)
+// Your group piles onto big favorites but fades close HOME favorites (road teams are popular).
+// CROWD_NOISE: game-to-game swings beyond that (some weeks the whole group jumps on one underdog).
+const CROWD_SLOPE=2.75, CROWD_HOME=-0.80, CROWD_NOISE=0.6;
 const SIMS=20000;
 
 let nPlayers=+(store.get('pk-n')||20);
@@ -147,10 +152,12 @@ const G=PICK.games.map((g,i)=>{
   const fav=praw==null?null:(praw>=0.5?'home':'away');
   const pf=ph==null?null:(fav==='home'?ph:1-ph);
   const prf=praw==null?null:Math.max(praw,1-praw);
-  const pub=prf==null?null:Math.pow(prf,PUBLIC_K)/(Math.pow(prf,PUBLIC_K)+Math.pow(1-prf,PUBLIC_K));
+  const lgt=x=>Math.log(x/(1-x)), sig=z=>1/(1+Math.exp(-z));
+  const crowdZ=prf==null?null:CROWD_SLOPE*lgt(prf)+(fav==='home'?CROWD_HOME:0);
+  const pub=crowdZ==null?null:sig(crowdZ);
   let winner=null;
   if(g.state==='post'&&g.score_home!=null) winner=g.score_home>g.score_away?'home':g.score_home<g.score_away?'away':'tie';
-  return {...g,i,fav,pf,pub,winner,open:g.state==='pre'&&ph!=null};
+  return {...g,i,fav,pf,pub,crowdZ,winner,open:g.state==='pre'&&ph!=null};
 });
 
 // ── simulation ──────────────────────────────────────────────────────────────
@@ -163,9 +170,11 @@ function buildSim(){
     const o=new Uint8Array(open.length);
     for(let j=0;j<open.length;j++) o[j]=r()<open[j].pf?1:0;
     favWins.push(o);
+    // this week's crowd lean on each game, with game-level noise
+    const lean=open.map(g=>{const u1=r()||1e-9,u2=r();const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);return 1/(1+Math.exp(-(g.crowdZ+CROWD_NOISE*z)));});
     let mx=-1,cnt=0;
     for(let k=0;k<opp;k++){
-      let sc=0; for(let j=0;j<open.length;j++){const pickFav=r()<open[j].pub; if(pickFav===(o[j]===1)) sc++;}
+      let sc=0; for(let j=0;j<open.length;j++){const pickFav=r()<lean[j]; if(pickFav===(o[j]===1)) sc++;}
       if(sc>mx){mx=sc;cnt=1;} else if(sc===mx) cnt++;
     }
     oppMax[s]=mx; oppTies[s]=cnt;
@@ -246,7 +255,7 @@ function render(){
     else if(!OPT.flips.length) lines.push(nPlayers<=12?`Take all the favorites this week. In a pool this size, upset picks barely change your odds of winning the week, so they aren't worth the lost expected wins.`:`No underdog is worth it this week, so take all the favorites.`);
     else OPT.flips.forEach(f=>{
       const g=SIM.open[f.j], dog=g.fav==='home'?'away':'home', d=teamSide(g,dog), fv=teamSide(g,g.fav);
-      lines.push(`Take <span class="dog">${esc(d.name)}</span> over ${esc(fv.name)}: ${pct(d.p)} to win, about ${pct(g.pub)} of your pool will be on ${esc(fv.name)}. Costs ${(fv.p-d.p).toFixed(2)} expected wins, raises your shot at the week from ${pct1(f.before)} to ${pct1(f.after)}.`);
+      lines.push(`Take <span class="dog">${esc(d.name)}</span> over ${esc(fv.name)}: ${pct(d.p)} to win, about ${pct(g.pub)} of your pool is likely on ${esc(fv.name)}. Costs ${(fv.p-d.p).toFixed(2)} expected wins, raises your shot at the week from ${pct1(f.before)} to ${pct1(f.after)}.`);
     });
     const last=[...G].filter(g=>g.total!=null).sort((a,b)=>(a.kick||'').localeCompare(b.kick||'')).pop();
     if(last) lines.push(`Tiebreaker (if it's the last game's total points): Vegas has ${esc(last.away_name)} at ${esc(last.home_name)} at <strong>${last.total}</strong>.`);
