@@ -1,0 +1,263 @@
+{
+ "source": "CBS weekly standings screen recording, top 10 of 20 only",
+ "season": 2026,
+ "week": 5,
+ "games": [
+  "TB@DAL",
+  "PHI@JAX",
+  "CIN@MIA",
+  "LV@NE",
+  "MIN@NO",
+  "CLE@NYJ",
+  "IND@PIT",
+  "HOU@TEN",
+  "NYG@WAS",
+  "CHI@GB",
+  "DEN@LAC",
+  "DET@ARI",
+  "SF@SEA",
+  "BAL@ATL",
+  "BUF@LAR"
+ ],
+ "vegas_fav": [
+  "DAL",
+  "JAX",
+  "CIN",
+  "NE",
+  "MIN",
+  "NYJ",
+  "PIT",
+  "HOU",
+  "WAS",
+  "CHI",
+  "DEN",
+  "DET",
+  "SEA",
+  "ATL",
+  "LAR"
+ ],
+ "winner": [
+  "TB",
+  "JAX",
+  "CIN",
+  "NE",
+  "MIN",
+  "NYJ",
+  "PIT",
+  "HOU",
+  null,
+  "GB",
+  "DEN",
+  "DET",
+  "SF",
+  "BAL",
+  "BUF"
+ ],
+ "players": {
+  "Josh Rogers": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "PIT",
+    "HOU",
+    "NYG",
+    "GB",
+    "DEN",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 35
+  },
+  "Linsey Co": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "PIT",
+    "HOU",
+    "NYG",
+    "GB",
+    "LAC",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 54
+  },
+  "Brian Sali": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "PIT",
+    "TEN",
+    "WAS",
+    "GB",
+    "DEN",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 52
+  },
+  "Mary Rus": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "NYJ",
+    "PIT",
+    "HOU",
+    "WAS",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "ATL",
+    "LAR"
+   ],
+   "tiebreak": 49
+  },
+  "Jeff Russell": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "NYJ",
+    "PIT",
+    "HOU",
+    "WAS",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "ATL",
+    "LAR"
+   ],
+   "tiebreak": 47
+  },
+  "Sheryl Mc": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "IND",
+    "HOU",
+    "NYG",
+    "CHI",
+    "DEN",
+    "DET",
+    "SF",
+    "BAL",
+    "LAR"
+   ],
+   "tiebreak": 43
+  },
+  "Michael M": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "LV",
+    "MIN",
+    "CLE",
+    "PIT",
+    "HOU",
+    "NYG",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 42
+  },
+  "michele h": {
+   "picks": [
+    "DAL",
+    "PHI",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "PIT",
+    "HOU",
+    "NYG",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 33
+  },
+  "Ben Kahle": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "IND",
+    "HOU",
+    "NYG",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "BAL",
+    "BUF"
+   ],
+   "tiebreak": 51
+  },
+  "Kyle Cog": {
+   "picks": [
+    "DAL",
+    "JAX",
+    "CIN",
+    "NE",
+    "MIN",
+    "CLE",
+    "PIT",
+    "HOU",
+    "NYG",
+    "CHI",
+    "DEN",
+    "DET",
+    "SEA",
+    "ATL",
+    "LAR"
+   ],
+   "tiebreak": 42
+  }
+ },
+ "bryce": {
+  "rank": 12,
+  "correct": 7,
+  "picks_note": "page Win the week: favorites except CLE and IND"
+ }
+}
