@@ -135,7 +135,7 @@ const PUBLIC_K=2.5;   // how strongly a typical pool piles onto favorites
 const SIMS=20000;
 
 let nPlayers=+(store.get('pk-n')||20);
-let goal=store.get('pk-goal')||'balanced';
+let goal=store.get('pk-goal')||'week';
 const override={};      // game index -> 'home'|'away'
 let wk=String(PICK.week);
 try{const o=JSON.parse(store.get('pk-override')||'{}'); if(o.week===wk) Object.assign(override,o.picks||{});}catch(e){}
