@@ -1,0 +1,38 @@
+name: Weekly review (projections, lineup, pick'em vs results)
+
+on:
+  schedule:
+    - cron: "30 14 * * 2"   # Tuesdays ~7:30am Pacific, after Monday night's game
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - review_week.py
+      - .github/workflows/review.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repo-writes
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Grade last week
+        run: python review_week.py
+      - name: Save review
+        run: |
+          git config user.name "diamond-scout-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "No changes."; exit 0; fi
+          git commit -m "Weekly review $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push && break; sleep 5; done
