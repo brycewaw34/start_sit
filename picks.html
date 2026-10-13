@@ -116,7 +116,7 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
     <p><strong>Win the week</strong> simulates your week thousands of times against the rest of your pool, assuming most people take favorites (and big favorites almost unanimously). If everyone has the same picks, nobody gains ground. Taking an underdog in a near coin-flip game costs you very little in expected wins but gives you a real chance to jump the field when it hits. The page only suggests flips that raise your odds of winning the week.</p>
     <p><strong>Edge spots.</strong> On 2006-2026 games, two kinds of underdogs beat their moneyline odds in both halves of the data: early-season dogs (weeks 1-4, about +2.8%) and dogs in low-scoring games (total 40 or under, about +2.9%), with bigger edges when they're small underdogs (+3 or less). Those dogs get a boost at half that size, since some of it is surely luck, and are tagged EDGE. The simulator uses the boosted chances, so it prefers edge-spot underdogs when picking upsets. Your pool is still assumed to pick off the raw Vegas line.</p>
     <p><strong>Balanced</strong> takes only the cheap flips: games where the underdog has at least a 40% chance, max two per week. A good default when there are both weekly and season prizes.</p>
-    <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 716 real picks in your CBS pool (weeks 3-5). Your group piles onto big favorites but often fades close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5). When that happens, the favorite is the contrarian pick.</p>
+    <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 1,423 real picks in your CBS pool (weeks 1-5). Your group piles onto big favorites but often fades close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5). When that happens, the favorite is the contrarian pick.</p>
     <p>Tap any team to override a pick. Injury tags and wind are shown for context; Vegas lines already move for big news, so they aren't added on top.</p>
   </div>
 </div>
@@ -132,11 +132,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const pct=v=>Math.round(v*100)+'%';
 const pct1=v=>v<0.2?(Math.round(v*1000)/10).toFixed(1)+'%':pct(v);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
-// How YOUR pool picks, fit on 716 real picks from weeks 3-5 (CBS grid):
-// share on favorite = sigmoid(2.75 * logit(win chance) - 0.80 if the favorite is at home)
+// How YOUR pool picks, fit on 1,423 real picks from weeks 1-5 (CBS grids):
+// share on favorite = sigmoid(2.75 * logit(win chance) - 0.65 if the favorite is at home)
 // Your group piles onto big favorites but fades close HOME favorites (road teams are popular).
 // CROWD_NOISE: game-to-game swings beyond that (some weeks the whole group jumps on one underdog).
-const CROWD_SLOPE=2.75, CROWD_HOME=-0.80, CROWD_NOISE=0.6;
+const CROWD_SLOPE=2.75, CROWD_HOME=-0.65, CROWD_NOISE=0.5;
 const SIMS=20000;
 
 let nPlayers=+(store.get('pk-n')||20);
