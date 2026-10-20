@@ -1,0 +1,525 @@
+{
+ "season": 2026,
+ "week": 6,
+ "grade": {
+  "final": {
+   "pairs": 0.6775,
+   "mae": 5.25,
+   "n": 224
+  },
+  "sleeper": {
+   "pairs": 0.6749,
+   "mae": 5.26,
+   "n": 222
+  },
+  "model": {
+   "pairs": 0.6732,
+   "mae": 5.52,
+   "n": 224
+  },
+  "espn": {
+   "pairs": 0.6761,
+   "mae": 5.06,
+   "n": 64
+  }
+ },
+ "big_misses": [
+  {
+   "n": "Bijan Robinson",
+   "p": "RB",
+   "t": "ATL",
+   "final": 25.4,
+   "a": 7.3
+  },
+  {
+   "n": "Kyren Williams",
+   "p": "RB",
+   "t": "LAR",
+   "final": 22.9,
+   "a": 9.7
+  },
+  {
+   "n": "Derrick Henry",
+   "p": "RB",
+   "t": "BAL",
+   "final": 18.1,
+   "a": 5.0
+  },
+  {
+   "n": "Bo Nix",
+   "p": "QB",
+   "t": "DEN",
+   "final": 17.1,
+   "a": 4.48
+  },
+  {
+   "n": "Rhamondre Stevenson",
+   "p": "RB",
+   "t": "NE",
+   "final": 15.1,
+   "a": 3.6
+  },
+  {
+   "n": "Puka Nacua",
+   "p": "WR",
+   "t": "LAR",
+   "final": 25.4,
+   "a": 14.0
+  },
+  {
+   "n": "Juwan Johnson",
+   "p": "TE",
+   "t": "NO",
+   "final": 11.2,
+   "a": 0
+  },
+  {
+   "n": "MarShawn Lloyd",
+   "p": "RB",
+   "t": "GB",
+   "final": 12.1,
+   "a": 1.0
+  }
+ ],
+ "big_hits": [
+  {
+   "n": "Tre Tucker",
+   "p": "WR",
+   "t": "LV",
+   "final": 9.3,
+   "a": 26.7
+  },
+  {
+   "n": "Trevor Lawrence",
+   "p": "QB",
+   "t": "JAX",
+   "final": 20.9,
+   "a": 37.34
+  },
+  {
+   "n": "Germie Bernard",
+   "p": "WR",
+   "t": "PIT",
+   "final": 9.5,
+   "a": 25.7
+  },
+  {
+   "n": "Malik Nabers",
+   "p": "WR",
+   "t": "NYG",
+   "final": 15.5,
+   "a": 29.5
+  },
+  {
+   "n": "C.J. Stroud",
+   "p": "QB",
+   "t": "HOU",
+   "final": 17.5,
+   "a": 30.98
+  },
+  {
+   "n": "Tyler Shough",
+   "p": "QB",
+   "t": "NO",
+   "final": 20.1,
+   "a": 32.96
+  },
+  {
+   "n": "Bhayshul Tuten",
+   "p": "RB",
+   "t": "JAX",
+   "final": 12.2,
+   "a": 24.7
+  },
+  {
+   "n": "Michael Penix",
+   "p": "QB",
+   "t": "ATL",
+   "final": 16.8,
+   "a": 29.1
+  }
+ ],
+ "projected_but_dnp": [
+  {
+   "n": "Jeremiyah Love",
+   "p": "RB",
+   "t": "ARI",
+   "final": 9.9
+  },
+  {
+   "n": "Tyson Bagent",
+   "p": "QB",
+   "t": "CHI",
+   "final": 8.8
+  },
+  {
+   "n": "Quinshon Judkins",
+   "p": "RB",
+   "t": "CLE",
+   "final": 10.7
+  },
+  {
+   "n": "Tyler Warren",
+   "p": "TE",
+   "t": "IND",
+   "final": 11.3
+  },
+  {
+   "n": "Rashee Rice",
+   "p": "WR",
+   "t": "KC",
+   "final": 12.5
+  },
+  {
+   "n": "Jalen Hurts",
+   "p": "QB",
+   "t": "PHI",
+   "final": 18.0
+  },
+  {
+   "n": "Drew Lock",
+   "p": "QB",
+   "t": "SEA",
+   "final": 10.7
+  },
+  {
+   "n": "Lamar Jackson",
+   "p": "QB",
+   "t": "BAL",
+   "final": 20.0
+  },
+  {
+   "n": "DJ Moore",
+   "p": "WR",
+   "t": "BUF",
+   "final": 12.1
+  },
+  {
+   "n": "Saquon Barkley",
+   "p": "RB",
+   "t": "PHI",
+   "final": 9.5
+  }
+ ],
+ "my_team": {
+  "points": 106.98,
+  "opp_points": 148.94,
+  "opp_name": "Los Angeles Chargers",
+  "started": [
+   {
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "pos": "QB",
+    "act": 11.48,
+    "proj": 21.2
+   },
+   {
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "pos": "RB",
+    "act": 21.1,
+    "proj": 23.5
+   },
+   {
+    "id": "11435",
+    "n": "Emanuel Wilson",
+    "pos": "RB",
+    "act": 5.2,
+    "proj": 12.8
+   },
+   {
+    "id": "8144",
+    "n": "Chris Olave",
+    "pos": "WR",
+    "act": 14.3,
+    "proj": 17.9
+   },
+   {
+    "id": "9500",
+    "n": "Josh Downs",
+    "pos": "WR",
+    "act": 8.7,
+    "proj": 11.8
+   },
+   {
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "pos": "RB",
+    "act": 24.7,
+    "proj": 12.2
+   },
+   {
+    "id": "13346",
+    "n": "Denzel Boston",
+    "pos": "WR",
+    "act": 2.5,
+    "proj": 11.6
+   },
+   {
+    "id": "12185",
+    "n": "Spencer Shrader",
+    "pos": "K",
+    "act": 9.0,
+    "proj": null
+   },
+   {
+    "id": "PIT",
+    "n": "PIT",
+    "pos": "DEF",
+    "act": 10.0,
+    "proj": null
+   }
+  ],
+  "tool_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 21.2,
+    "act": 11.48
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 23.5,
+    "act": 21.1
+   },
+   {
+    "slot": "RB",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 13.3,
+    "act": 12.4
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 17.9,
+    "act": 14.3
+   },
+   {
+    "slot": "WR",
+    "id": "9500",
+    "n": "Josh Downs",
+    "proj": 11.8,
+    "act": 8.7
+   },
+   {
+    "slot": "FLEX",
+    "id": "11435",
+    "n": "Emanuel Wilson",
+    "proj": 12.8,
+    "act": 5.2
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "13346",
+    "n": "Denzel Boston",
+    "proj": 11.6,
+    "act": 2.5
+   }
+  ],
+  "hindsight_lineup": [
+   {
+    "slot": "QB",
+    "id": "11560",
+    "n": "Caleb Williams",
+    "proj": 19.3,
+    "act": 19.5
+   },
+   {
+    "slot": "RB",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 12.2,
+    "act": 24.7
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 23.5,
+    "act": 21.1
+   },
+   {
+    "slot": "WR",
+    "id": "13274",
+    "n": "Germie Bernard",
+    "proj": 9.5,
+    "act": 25.7
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 17.9,
+    "act": 14.3
+   },
+   {
+    "slot": "FLEX",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 13.3,
+    "act": 12.4
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "9500",
+    "n": "Josh Downs",
+    "proj": 11.8,
+    "act": 8.7
+   }
+  ],
+  "tool_points": 75.68,
+  "hindsight_points": 126.4,
+  "started_skill_points": 87.98,
+  "tool_vs_started": [
+   "11576",
+   "12490"
+  ]
+ },
+ "pickem": [
+  {
+   "home": "DEN",
+   "away": "SEA",
+   "hs": 17.0,
+   "as": 14.0,
+   "state": "post",
+   "p_home": 0.412,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "JAX",
+   "away": "HOU",
+   "hs": 31.0,
+   "as": 34.0,
+   "state": "post",
+   "p_home": 0.588,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "ATL",
+   "away": "CHI",
+   "hs": 23.0,
+   "as": 31.0,
+   "state": "post",
+   "p_home": 0.447,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "CLE",
+   "away": "BAL",
+   "hs": 13.0,
+   "as": 10.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "IND",
+   "away": "TEN",
+   "hs": 20.0,
+   "as": 26.0,
+   "state": "post",
+   "p_home": 0.718,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "NE",
+   "away": "NYJ",
+   "hs": 26.0,
+   "as": 19.0,
+   "state": "post",
+   "p_home": 0.748,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "NYG",
+   "away": "NO",
+   "hs": 27.0,
+   "as": 34.0,
+   "state": "post",
+   "p_home": 0.447,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "PHI",
+   "away": "CAR",
+   "hs": 14.0,
+   "as": 25.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "TB",
+   "away": "PIT",
+   "hs": 19.0,
+   "as": 26.0,
+   "state": "post",
+   "p_home": 0.412,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "LAR",
+   "away": "ARI",
+   "hs": 16.0,
+   "as": 18.0,
+   "state": "post",
+   "p_home": 0.867,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "KC",
+   "away": "LAC",
+   "hs": 22.0,
+   "as": 6.0,
+   "state": "post",
+   "p_home": 0.748,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "LV",
+   "away": "BUF",
+   "hs": 30.0,
+   "as": 33.0,
+   "state": "post",
+   "p_home": 0.312,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "GB",
+   "away": "DAL",
+   "hs": 23.0,
+   "as": 13.0,
+   "state": "post",
+   "p_home": 0.447,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "SF",
+   "away": "WAS",
+   "hs": 23.0,
+   "as": 17.0,
+   "state": "post",
+   "p_home": 0.748,
+   "fav": "home",
+   "winner": "home"
+  }
+ ]
+}
