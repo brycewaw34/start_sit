@@ -118,8 +118,8 @@ th{background:var(--s2);color:var(--t3);font-weight:500}
     <p><strong>Edge spots.</strong> On 2006-2026 games, two kinds of underdogs beat their moneyline odds in both halves of the data: early-season dogs (weeks 1-4, about +2.8%) and dogs in low-scoring games (total 40 or under, about +2.9%), with bigger edges when they're small underdogs (+3 or less). Those dogs get a boost at half that size, since some of it is surely luck, and are tagged EDGE. The simulator uses the boosted chances, so it prefers edge-spot underdogs when picking upsets. Your pool is still assumed to pick off the raw Vegas line.</p>
     <p><strong>Balanced</strong> takes only the cheap flips: games where the underdog has at least a 40% chance, max two per week. A good default when there are both weekly and season prizes.</p>
     <p><strong>Following the money.</strong> Win chances come from the current Vegas line, which already moves when sharp money comes in, so late money is baked in. Each game also shows where the line opened vs now, the moneyline win chance as a cross-check, and a BIG MOVE tag when the spread moved 1.5+ points or the favorite flipped. Records, byes, short weeks and division games are shown for context; Vegas prices those in too, so they don't change the numbers. Make your picks as close to kickoff as your pool allows.</p>
-    <p><strong>Tiebreaker.</strong> Totals are mostly luck: since 2018 the actual total lands within 3 points of the Vegas total only 20% of the time (typical miss about 13 points). Your pool's guesses (weeks 1-5) run about 4.5 points under the Vegas total, so the page suggests the Vegas total plus 2. In a simulation against your pool's real guesses, that wins a tiebreak slightly more often than guessing right on the total, especially in 3+ way ties.</p>
-    <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 1,423 real picks in your CBS pool (weeks 1-5). Your group piles onto big favorites but often fades close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5). When that happens, the favorite is the contrarian pick.</p>
+    <p><strong>Tiebreaker.</strong> Totals are mostly luck: since 2018 the actual total lands within 3 points of the Vegas total only 20% of the time (typical miss about 13 points). Your pool's guesses run about 4 points under the Vegas total on average (weeks 1-5 and 7; in week 7 they were right around it), so the page suggests the Vegas total plus 2. In a simulation against your pool's real guesses, that wins a tiebreak slightly more often than guessing right on the total, especially in 3+ way ties.</p>
+    <p><strong>Your pool, not a generic one.</strong> The "% of pool" estimates come from 1,700 real picks in your CBS pool (weeks 1-5 and 7). Your group piles onto big favorites, leans a little away from close <em>home</em> favorites, and some weeks the whole group jumps on one underdog (8 of the top 10 took the Browns in week 5, 14 of 20 took the Ravens over the favored Bengals in week 7). Those swings are real but hard to call ahead of time, so the simulation treats them as noise. When the group does pile on a dog, the favorite is the contrarian pick.</p>
     <p>Tap any team to override a pick. Injury tags and wind are shown for context; Vegas lines already move for big news, so they aren't added on top.</p>
   </div>
 </div>
@@ -135,11 +135,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const pct=v=>Math.round(v*100)+'%';
 const pct1=v=>v<0.2?(Math.round(v*1000)/10).toFixed(1)+'%':pct(v);
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
-// How YOUR pool picks, fit on 1,423 real picks from weeks 1-5 (CBS grids):
-// share on favorite = sigmoid(2.75 * logit(win chance) - 0.65 if the favorite is at home)
+// How YOUR pool picks, fit on 1,700 real picks from weeks 1-5 and 7 (CBS grids):
+// share on favorite = sigmoid(2.75 * logit(win chance) - 0.45 if the favorite is at home)
 // Your group piles onto big favorites but fades close HOME favorites (road teams are popular).
 // CROWD_NOISE: game-to-game swings beyond that (some weeks the whole group jumps on one underdog).
-const CROWD_SLOPE=2.75, CROWD_HOME=-0.65, CROWD_NOISE=0.5;
+const CROWD_SLOPE=2.75, CROWD_HOME=-0.45, CROWD_NOISE=0.85;
 const SIMS=20000;
 
 let nPlayers=+(store.get('pk-n')||20);
