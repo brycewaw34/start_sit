@@ -1,0 +1,537 @@
+{
+ "season": 2026,
+ "week": 7,
+ "grade": {
+  "final": {
+   "pairs": 0.7114,
+   "mae": 5.27,
+   "n": 218
+  },
+  "sleeper": {
+   "pairs": 0.704,
+   "mae": 5.24,
+   "n": 216
+  },
+  "model": {
+   "pairs": 0.6932,
+   "mae": 5.62,
+   "n": 218
+  },
+  "espn": {
+   "pairs": 0.7188,
+   "mae": 4.79,
+   "n": 68
+  }
+ },
+ "big_misses": [
+  {
+   "n": "Nico Collins",
+   "p": "WR",
+   "t": "HOU",
+   "final": 16.9,
+   "a": 2.6
+  },
+  {
+   "n": "Jalen Coker",
+   "p": "WR",
+   "t": "CAR",
+   "final": 15.7,
+   "a": 1.9
+  },
+  {
+   "n": "Bryce Young",
+   "p": "QB",
+   "t": "CAR",
+   "final": 21.7,
+   "a": 9.42
+  },
+  {
+   "n": "Patrick Mahomes",
+   "p": "QB",
+   "t": "KC",
+   "final": 18.6,
+   "a": 7.0
+  },
+  {
+   "n": "Sam LaPorta",
+   "p": "TE",
+   "t": "DET",
+   "final": 13.8,
+   "a": 2.8
+  },
+  {
+   "n": "Garrett Wilson",
+   "p": "WR",
+   "t": "NYJ",
+   "final": 15.6,
+   "a": 4.6
+  },
+  {
+   "n": "Derrick Henry",
+   "p": "RB",
+   "t": "BAL",
+   "final": 16.7,
+   "a": 5.9
+  },
+  {
+   "n": "Isaiah Likely",
+   "p": "TE",
+   "t": "NYG",
+   "final": 13.9,
+   "a": 3.2
+  }
+ ],
+ "big_hits": [
+  {
+   "n": "Tony Pollard",
+   "p": "RB",
+   "t": "TEN",
+   "final": 14.8,
+   "a": 37.5
+  },
+  {
+   "n": "KC Concepcion Jr.",
+   "p": "WR",
+   "t": "CLE",
+   "final": 9.0,
+   "a": 24.2
+  },
+  {
+   "n": "Omar Cooper Jr.",
+   "p": "WR",
+   "t": "NYJ",
+   "final": 9.3,
+   "a": 23.5
+  },
+  {
+   "n": "Malik Willis",
+   "p": "QB",
+   "t": "MIA",
+   "final": 16.3,
+   "a": 30.02
+  },
+  {
+   "n": "Jameson Williams",
+   "p": "WR",
+   "t": "DET",
+   "final": 12.5,
+   "a": 26.1
+  },
+  {
+   "n": "Tre Tucker",
+   "p": "WR",
+   "t": "LV",
+   "final": 9.4,
+   "a": 22.3
+  },
+  {
+   "n": "Caleb Douglas",
+   "p": "WR",
+   "t": "MIA",
+   "final": 8.2,
+   "a": 21.0
+  },
+  {
+   "n": "Joe Burrow",
+   "p": "QB",
+   "t": "CIN",
+   "final": 24.4,
+   "a": 36.88
+  }
+ ],
+ "projected_but_dnp": [
+  {
+   "n": "Tyson Bagent",
+   "p": "QB",
+   "t": "CHI",
+   "final": 8.4
+  },
+  {
+   "n": "Carson Wentz",
+   "p": "QB",
+   "t": "MIN",
+   "final": 11.5
+  },
+  {
+   "n": "DeVonta Smith",
+   "p": "WR",
+   "t": "PHI",
+   "final": 14.3
+  },
+  {
+   "n": "Drew Lock",
+   "p": "QB",
+   "t": "SEA",
+   "final": 11.5
+  },
+  {
+   "n": "Emeka Egbuka",
+   "p": "WR",
+   "t": "TB",
+   "final": 10.9
+  },
+  {
+   "n": "Jeremiyah Love",
+   "p": "RB",
+   "t": "ARI",
+   "final": 9.4
+  },
+  {
+   "n": "Lamar Jackson",
+   "p": "QB",
+   "t": "BAL",
+   "final": 19.1
+  },
+  {
+   "n": "David Montgomery",
+   "p": "RB",
+   "t": "HOU",
+   "final": 9.9
+  },
+  {
+   "n": "Tyler Warren",
+   "p": "TE",
+   "t": "IND",
+   "final": 9.7
+  },
+  {
+   "n": "Rashee Rice",
+   "p": "WR",
+   "t": "KC",
+   "final": 11.1
+  },
+  {
+   "n": "Breece Hall",
+   "p": "RB",
+   "t": "NYJ",
+   "final": 13.2
+  },
+  {
+   "n": "Mike Evans",
+   "p": "WR",
+   "t": "SF",
+   "final": 16.2
+  }
+ ],
+ "my_team": {
+  "points": 127.22,
+  "opp_points": 108.98,
+  "opp_name": "YT Men run the ball",
+  "started": [
+   {
+    "id": "11560",
+    "n": "Caleb Williams",
+    "pos": "QB",
+    "act": 27.12,
+    "proj": 19.5
+   },
+   {
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "pos": "RB",
+    "act": 19.0,
+    "proj": 16.9
+   },
+   {
+    "id": "11576",
+    "n": "Braelon Allen",
+    "pos": "RB",
+    "act": 20.4,
+    "proj": 15.2
+   },
+   {
+    "id": "8144",
+    "n": "Chris Olave",
+    "pos": "WR",
+    "act": 11.6,
+    "proj": 17.0
+   },
+   {
+    "id": "13274",
+    "n": "Germie Bernard",
+    "pos": "WR",
+    "act": 5.7,
+    "proj": 11.3
+   },
+   {
+    "id": "12512",
+    "n": "Quinshon Judkins",
+    "pos": "RB",
+    "act": 23.4,
+    "proj": 12.0
+   },
+   {
+    "id": "13346",
+    "n": "Denzel Boston",
+    "pos": "WR",
+    "act": 5.7,
+    "proj": 11.0
+   },
+   {
+    "id": "12185",
+    "n": "Spencer Shrader",
+    "pos": "K",
+    "act": 5.3,
+    "proj": null
+   },
+   {
+    "id": "PIT",
+    "n": "PIT",
+    "pos": "DEF",
+    "act": 9.0,
+    "proj": null
+   }
+  ],
+  "tool_lineup": [
+   {
+    "slot": "QB",
+    "id": "11560",
+    "n": "Caleb Williams",
+    "proj": 19.5,
+    "act": 27.12
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 16.9,
+    "act": 19.0
+   },
+   {
+    "slot": "RB",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 15.2,
+    "act": 20.4
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 17.0,
+    "act": 11.6
+   },
+   {
+    "slot": "WR",
+    "id": "13274",
+    "n": "Germie Bernard",
+    "proj": 11.3,
+    "act": 5.7
+   },
+   {
+    "slot": "FLEX",
+    "id": "4866",
+    "n": "Saquon Barkley",
+    "proj": 12.6,
+    "act": 15.1
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "13346",
+    "n": "Denzel Boston",
+    "proj": 11.0,
+    "act": 5.7
+   }
+  ],
+  "hindsight_lineup": [
+   {
+    "slot": "QB",
+    "id": "11560",
+    "n": "Caleb Williams",
+    "proj": 19.5,
+    "act": 27.12
+   },
+   {
+    "slot": "RB",
+    "id": "12512",
+    "n": "Quinshon Judkins",
+    "proj": 12.0,
+    "act": 23.4
+   },
+   {
+    "slot": "RB",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 15.2,
+    "act": 20.4
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 17.0,
+    "act": 11.6
+   },
+   {
+    "slot": "WR",
+    "id": "13274",
+    "n": "Germie Bernard",
+    "proj": 11.3,
+    "act": 5.7
+   },
+   {
+    "slot": "FLEX",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 16.9,
+    "act": 19.0
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "13346",
+    "n": "Denzel Boston",
+    "proj": 11.0,
+    "act": 5.7
+   }
+  ],
+  "tool_points": 104.62,
+  "hindsight_points": 112.92,
+  "started_skill_points": 112.92,
+  "tool_vs_started": [
+   "12512",
+   "4866"
+  ]
+ },
+ "pickem": [
+  {
+   "home": "CHI",
+   "away": "NE",
+   "hs": 30.0,
+   "as": 24.0,
+   "state": "post",
+   "p_home": 0.605,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "NO",
+   "away": "PIT",
+   "hs": 10.0,
+   "as": 16.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "ATL",
+   "away": "SF",
+   "hs": 29.0,
+   "as": 20.0,
+   "state": "post",
+   "p_home": 0.412,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "TEN",
+   "away": "CLE",
+   "hs": 24.0,
+   "as": 27.0,
+   "state": "post",
+   "p_home": 0.447,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "MIN",
+   "away": "IND",
+   "hs": 16.0,
+   "as": 10.0,
+   "state": "post",
+   "p_home": 0.718,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "NYJ",
+   "away": "MIA",
+   "hs": 25.0,
+   "as": 28.0,
+   "state": "post",
+   "p_home": 0.622,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "CAR",
+   "away": "TB",
+   "hs": 13.0,
+   "as": 43.0,
+   "state": "post",
+   "p_home": 0.605,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "BAL",
+   "away": "CIN",
+   "hs": 13.0,
+   "as": 35.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "HOU",
+   "away": "NYG",
+   "hs": 21.0,
+   "as": 27.0,
+   "state": "post",
+   "p_home": 0.813,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "ARI",
+   "away": "DEN",
+   "hs": 16.0,
+   "as": 30.0,
+   "state": "post",
+   "p_home": 0.345,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "DET",
+   "away": "GB",
+   "hs": 20.0,
+   "as": 17.0,
+   "state": "post",
+   "p_home": 0.622,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "LV",
+   "away": "LAR",
+   "hs": 21.0,
+   "as": 35.0,
+   "state": "post",
+   "p_home": 0.378,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "SEA",
+   "away": "KC",
+   "hs": 20.0,
+   "as": 3.0,
+   "state": "post",
+   "p_home": 0.605,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "PHI",
+   "away": "DAL",
+   "hs": 21.0,
+   "as": 38.0,
+   "state": "post",
+   "p_home": 0.345,
+   "fav": "away",
+   "winner": "away"
+  }
+ ]
+}
