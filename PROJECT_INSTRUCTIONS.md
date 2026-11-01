@@ -9,7 +9,7 @@ Live site
 - Repo: github.com/brycewaw34/start_sit (Claude GitHub app installed, Claude can push directly)
 
 How it updates
-- GitHub Actions runs update_stats.py daily ~6am PT, plus Sunday ~9am and ~12:30pm PT after inactives. Also runs on any push that changes the code.
+- GitHub Actions runs update_stats.py daily ~6am PT, plus Sunday after early and late inactives (~8:45am and ~12:45pm PT in winter, ~9am and ~12:30pm in summer; doubled crons cover both clock settings). Also runs on any push that changes the code.
 - backtest.py runs Tuesdays ~8am PT and regrades everything.
 - Python standard library only, nothing to install. If a data source fails, the run exits without touching the pages.
 - Data is baked into each HTML file between /*@@DATA@@*/ and /*@@END@@*/ markers. Never hand-edit that block. The pages make no network calls.

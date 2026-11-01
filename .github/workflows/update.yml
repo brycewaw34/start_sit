@@ -3,8 +3,12 @@ name: Update Diamond Scout data
 on:
   schedule:
     - cron: "0 13 * * *"    # every day, ~6am Pacific: new stats, injuries, lines
-    - cron: "0 16 * * 0"    # Sunday ~9am Pacific: early-game inactives are out
-    - cron: "30 19 * * 0"   # Sunday ~12:30pm Pacific: late-game inactives
+    # Sunday runs after inactives (90 min before kickoff). Two of each so they land right
+    # whether Pacific is on daylight time (UTC-7) or standard time (UTC-8).
+    - cron: "0 16 * * 0"    # Sunday 9am PDT / 8am PST: early-game inactives (daylight time)
+    - cron: "45 16 * * 0"   # Sunday 9:45am PDT / 8:45am PST: early-game inactives (standard time)
+    - cron: "30 19 * * 0"   # Sunday 12:30pm PDT / 11:30am PST: late-game inactives (daylight time)
+    - cron: "45 20 * * 0"   # Sunday 1:45pm PDT / 12:45pm PST: late-game inactives (standard time)
   workflow_dispatch:         # "Run workflow" button for a manual refresh
   push:                      # run right away when the script or workflow changes
     branches: [main]

@@ -27,7 +27,7 @@ Either tell Claude "the repo is created" and it will push the files for you, or 
 
 ## What runs and when
 - **Every day around 6am Pacific:** new stats, injury tags, Vegas lines, and projections.
-- **Sunday around 9am and 12:30pm Pacific:** refreshes after early and late game inactives come out.
+- **Sunday after inactives:** around 8:45am and 12:45pm Pacific in standard time (9am and 12:30pm in daylight time). There are two runs for each window so one always lands after early and late game inactives come out.
 - **Tuesdays:** the model report (`backtest.html`) re-grades Sleeper vs our model vs actual results.
 - If Sleeper or another source is down, the run fails safely and the page keeps its last good data.
   GitHub emails you about failed runs.
