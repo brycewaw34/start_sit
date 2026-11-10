@@ -1,0 +1,574 @@
+{
+ "season": 2026,
+ "week": 9,
+ "grade": {
+  "final": {
+   "pairs": 0.6924,
+   "mae": 5.16,
+   "n": 222
+  },
+  "sleeper": {
+   "pairs": 0.6865,
+   "mae": 5.26,
+   "n": 220
+  },
+  "model": {
+   "pairs": 0.6841,
+   "mae": 5.15,
+   "n": 222
+  },
+  "espn": {
+   "pairs": 0.677,
+   "mae": 5.71,
+   "n": 66
+  }
+ },
+ "big_misses": [
+  {
+   "n": "Carson Wentz",
+   "p": "QB",
+   "t": "MIN",
+   "final": 18.6,
+   "a": -0.76
+  },
+  {
+   "n": "Jared Goff",
+   "p": "QB",
+   "t": "DET",
+   "final": 24.4,
+   "a": 6.3
+  },
+  {
+   "n": "D'Andre Swift",
+   "p": "RB",
+   "t": "CHI",
+   "final": 18.6,
+   "a": 3.1
+  },
+  {
+   "n": "Malik Willis",
+   "p": "QB",
+   "t": "MIA",
+   "final": 20.3,
+   "a": 4.82
+  },
+  {
+   "n": "Josh Jacobs",
+   "p": "RB",
+   "t": "GB",
+   "final": 15.9,
+   "a": 0.5
+  },
+  {
+   "n": "Jahmyr Gibbs",
+   "p": "RB",
+   "t": "DET",
+   "final": 28.1,
+   "a": 13.4
+  },
+  {
+   "n": "Jaxon Smith-Njigba",
+   "p": "WR",
+   "t": "SEA",
+   "final": 25.4,
+   "a": 12.1
+  },
+  {
+   "n": "Joe Fagnano",
+   "p": "QB",
+   "t": "BAL",
+   "final": 12.6,
+   "a": 1.7
+  }
+ ],
+ "big_hits": [
+  {
+   "n": "C.J. Stroud",
+   "p": "QB",
+   "t": "HOU",
+   "final": 19.7,
+   "a": 47.36
+  },
+  {
+   "n": "Jordan Love",
+   "p": "QB",
+   "t": "GB",
+   "final": 20.7,
+   "a": 43.18
+  },
+  {
+   "n": "Matthew Golden",
+   "p": "WR",
+   "t": "GB",
+   "final": 15.1,
+   "a": 33.4
+  },
+  {
+   "n": "Christian Watson",
+   "p": "WR",
+   "t": "GB",
+   "final": 16.3,
+   "a": 31.1
+  },
+  {
+   "n": "Shedeur Sanders",
+   "p": "QB",
+   "t": "CLE",
+   "final": 11.9,
+   "a": 26.68
+  },
+  {
+   "n": "Kenneth Walker III",
+   "p": "RB",
+   "t": "KC",
+   "final": 23.6,
+   "a": 37.3
+  },
+  {
+   "n": "CeeDee Lamb",
+   "p": "WR",
+   "t": "DAL",
+   "final": 21.2,
+   "a": 34.5
+  },
+  {
+   "n": "Ja'Marr Chase",
+   "p": "WR",
+   "t": "CIN",
+   "final": 19.7,
+   "a": 32.5
+  }
+ ],
+ "projected_but_dnp": [
+  {
+   "n": "Jacoby Brissett",
+   "p": "QB",
+   "t": "ARI",
+   "final": 11.5
+  },
+  {
+   "n": "Deshaun Watson",
+   "p": "QB",
+   "t": "CLE",
+   "final": 17.1
+  },
+  {
+   "n": "George Pickens",
+   "p": "WR",
+   "t": "DAL",
+   "final": 13.8
+  },
+  {
+   "n": "Ladd McConkey",
+   "p": "WR",
+   "t": "LAC",
+   "final": 11.8
+  },
+  {
+   "n": "Kyler Murray",
+   "p": "QB",
+   "t": "MIN",
+   "final": 8.7
+  },
+  {
+   "n": "Kendre Miller",
+   "p": "RB",
+   "t": "NO",
+   "final": 8.7
+  },
+  {
+   "n": "Cam Skattebo",
+   "p": "RB",
+   "t": "NYG",
+   "final": 10.8
+  },
+  {
+   "n": "Garrett Wilson",
+   "p": "WR",
+   "t": "NYJ",
+   "final": 13.2
+  },
+  {
+   "n": "Tanner McKee",
+   "p": "QB",
+   "t": "PHI",
+   "final": 12.8
+  },
+  {
+   "n": "Sam Darnold",
+   "p": "QB",
+   "t": "SEA",
+   "final": 21.4
+  },
+  {
+   "n": "Treylon Burks",
+   "p": "WR",
+   "t": "WAS",
+   "final": 8.0
+  },
+  {
+   "n": "Kyle Monangai",
+   "p": "RB",
+   "t": "CHI",
+   "final": 8.8
+  },
+  {
+   "n": "David Montgomery",
+   "p": "RB",
+   "t": "HOU",
+   "final": 9.1
+  },
+  {
+   "n": "A.J. Brown",
+   "p": "WR",
+   "t": "NE",
+   "final": 12.5
+  },
+  {
+   "n": "DeVonta Smith",
+   "p": "WR",
+   "t": "PHI",
+   "final": 10.3
+  },
+  {
+   "n": "Mike Evans",
+   "p": "WR",
+   "t": "SF",
+   "final": 15.3
+  },
+  {
+   "n": "Deebo Samuel Sr.",
+   "p": "WR",
+   "t": "SF",
+   "final": 8.6
+  }
+ ],
+ "my_team": {
+  "points": 119.18,
+  "opp_points": 100.2,
+  "opp_name": "Njigbas in Paris",
+  "started": [
+   {
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "pos": "QB",
+    "act": 20.48,
+    "proj": 25.3
+   },
+   {
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "pos": "RB",
+    "act": 9.4,
+    "proj": 17.5
+   },
+   {
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "pos": "RB",
+    "act": 8.9,
+    "proj": 14.3
+   },
+   {
+    "id": "8144",
+    "n": "Chris Olave",
+    "pos": "WR",
+    "act": 16.8,
+    "proj": 15.8
+   },
+   {
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "pos": "WR",
+    "act": 0.0,
+    "proj": 11.8
+   },
+   {
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "pos": "RB",
+    "act": 18.8,
+    "proj": 14.6
+   },
+   {
+    "id": "12506",
+    "n": "Harold Fannin Jr.",
+    "pos": "TE",
+    "act": 12.2,
+    "proj": 11.4
+   },
+   {
+    "id": "12185",
+    "n": "Spencer Shrader",
+    "pos": "K",
+    "act": 17.6,
+    "proj": null
+   },
+   {
+    "id": "CHI",
+    "n": "CHI",
+    "pos": "DEF",
+    "act": 15.0,
+    "proj": null
+   }
+  ],
+  "tool_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 25.3,
+    "act": 20.48
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 17.5,
+    "act": 9.4
+   },
+   {
+    "slot": "RB",
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "proj": 14.6,
+    "act": 18.8
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 15.8,
+    "act": 16.8
+   },
+   {
+    "slot": "WR",
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "proj": 11.8,
+    "act": 0.0
+   },
+   {
+    "slot": "FLEX",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 14.3,
+    "act": 8.9
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "12506",
+    "n": "Harold Fannin Jr.",
+    "proj": 11.4,
+    "act": 12.2
+   }
+  ],
+  "hindsight_lineup": [
+   {
+    "slot": "QB",
+    "id": "11560",
+    "n": "Caleb Williams",
+    "proj": 19.4,
+    "act": 20.76
+   },
+   {
+    "slot": "RB",
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "proj": 14.6,
+    "act": 18.8
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 17.5,
+    "act": 9.4
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 15.8,
+    "act": 16.8
+   },
+   {
+    "slot": "WR",
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "proj": 11.8,
+    "act": 0.0
+   },
+   {
+    "slot": "FLEX",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 14.3,
+    "act": 8.9
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "12506",
+    "n": "Harold Fannin Jr.",
+    "proj": 11.4,
+    "act": 12.2
+   }
+  ],
+  "tool_points": 86.58,
+  "hindsight_points": 86.86,
+  "started_skill_points": 86.58,
+  "tool_vs_started": []
+ },
+ "pickem": [
+  {
+   "home": "BAL",
+   "away": "JAX",
+   "hs": 10.0,
+   "as": 33.0,
+   "state": "post",
+   "p_home": 0.225,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "ATL",
+   "away": "CIN",
+   "hs": 17.0,
+   "as": 34.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "IND",
+   "away": "DAL",
+   "hs": 23.0,
+   "as": 27.0,
+   "state": "post",
+   "p_home": 0.345,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "KC",
+   "away": "NYJ",
+   "hs": 35.0,
+   "as": 12.0,
+   "state": "post",
+   "p_home": 0.801,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "MIA",
+   "away": "DET",
+   "hs": 9.0,
+   "as": 19.0,
+   "state": "post",
+   "p_home": 0.282,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "NO",
+   "away": "CLE",
+   "hs": 23.0,
+   "as": 22.0,
+   "state": "post",
+   "p_home": 0.655,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "PHI",
+   "away": "NYG",
+   "hs": 11.0,
+   "as": 19.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "WAS",
+   "away": "LAR",
+   "hs": 13.0,
+   "as": 20.0,
+   "state": "post",
+   "p_home": 0.345,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "CAR",
+   "away": "DEN",
+   "hs": 21.0,
+   "as": 26.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "LAC",
+   "away": "HOU",
+   "hs": 22.0,
+   "as": 44.0,
+   "state": "post",
+   "p_home": 0.312,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "NE",
+   "away": "GB",
+   "hs": 27.0,
+   "as": 45.0,
+   "state": "post",
+   "p_home": 0.605,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "SF",
+   "away": "LV",
+   "hs": 38.0,
+   "as": 17.0,
+   "state": "post",
+   "p_home": 0.775,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "SEA",
+   "away": "ARI",
+   "hs": 17.0,
+   "as": 3.0,
+   "state": "post",
+   "p_home": 0.775,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "CHI",
+   "away": "TB",
+   "hs": 27.0,
+   "as": 24.0,
+   "state": "post",
+   "p_home": 0.718,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "MIN",
+   "away": "BUF",
+   "hs": 6.0,
+   "as": 23.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  }
+ ]
+}
