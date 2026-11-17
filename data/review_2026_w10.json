@@ -1,0 +1,525 @@
+{
+ "season": 2026,
+ "week": 10,
+ "grade": {
+  "final": {
+   "pairs": 0.6753,
+   "mae": 5.91,
+   "n": 220
+  },
+  "sleeper": {
+   "pairs": 0.6813,
+   "mae": 5.87,
+   "n": 218
+  },
+  "model": {
+   "pairs": 0.6622,
+   "mae": 6.15,
+   "n": 220
+  },
+  "espn": {
+   "pairs": 0.742,
+   "mae": 5.67,
+   "n": 62
+  }
+ },
+ "big_misses": [
+  {
+   "n": "Drake Maye",
+   "p": "QB",
+   "t": "NE",
+   "final": 26.6,
+   "a": 3.02
+  },
+  {
+   "n": "Bryce Young",
+   "p": "QB",
+   "t": "CAR",
+   "final": 21.9,
+   "a": 8.1
+  },
+  {
+   "n": "Geno Smith",
+   "p": "QB",
+   "t": "NYJ",
+   "final": 19.6,
+   "a": 5.92
+  },
+  {
+   "n": "Kyren Williams",
+   "p": "RB",
+   "t": "LAR",
+   "final": 18.0,
+   "a": 5.2
+  },
+  {
+   "n": "Jalen Coker",
+   "p": "WR",
+   "t": "CAR",
+   "final": 12.7,
+   "a": 0.3
+  },
+  {
+   "n": "Brock Bowers",
+   "p": "TE",
+   "t": "LV",
+   "final": 15.1,
+   "a": 3.8
+  },
+  {
+   "n": "Chris Olave",
+   "p": "WR",
+   "t": "NO",
+   "final": 16.8,
+   "a": 6.0
+  },
+  {
+   "n": "Tyler Warren",
+   "p": "TE",
+   "t": "IND",
+   "final": 12.9,
+   "a": 2.4
+  }
+ ],
+ "big_hits": [
+  {
+   "n": "George Pickens",
+   "p": "WR",
+   "t": "DAL",
+   "final": 13.8,
+   "a": 44.5
+  },
+  {
+   "n": "Christian McCaffrey",
+   "p": "RB",
+   "t": "SF",
+   "final": 22.4,
+   "a": 47.3
+  },
+  {
+   "n": "Dak Prescott",
+   "p": "QB",
+   "t": "DAL",
+   "final": 22.3,
+   "a": 46.42
+  },
+  {
+   "n": "Emmett Johnson",
+   "p": "RB",
+   "t": "KC",
+   "final": 13.6,
+   "a": 36.1
+  },
+  {
+   "n": "Jahmyr Gibbs",
+   "p": "RB",
+   "t": "DET",
+   "final": 25.4,
+   "a": 45.2
+  },
+  {
+   "n": "Patrick Mahomes",
+   "p": "QB",
+   "t": "KC",
+   "final": 27.2,
+   "a": 46.42
+  },
+  {
+   "n": "Ja'Marr Chase",
+   "p": "WR",
+   "t": "CIN",
+   "final": 19.8,
+   "a": 38.1
+  },
+  {
+   "n": "Joe Burrow",
+   "p": "QB",
+   "t": "CIN",
+   "final": 27.7,
+   "a": 45.16
+  }
+ ],
+ "projected_but_dnp": [
+  {
+   "n": "Gardner Minshew II",
+   "p": "QB",
+   "t": "ARI",
+   "final": 13.8
+  },
+  {
+   "n": "Kenneth Walker III",
+   "p": "RB",
+   "t": "KC",
+   "final": 21.8
+  },
+  {
+   "n": "Ladd McConkey",
+   "p": "WR",
+   "t": "LAC",
+   "final": 10.3
+  },
+  {
+   "n": "Puka Nacua",
+   "p": "WR",
+   "t": "LAR",
+   "final": 23.4
+  },
+  {
+   "n": "Malik Willis",
+   "p": "QB",
+   "t": "MIA",
+   "final": 18.0
+  },
+  {
+   "n": "Jordan Addison",
+   "p": "WR",
+   "t": "MIN",
+   "final": 9.7
+  },
+  {
+   "n": "T.J. Hockenson",
+   "p": "TE",
+   "t": "MIN",
+   "final": 10.3
+  },
+  {
+   "n": "Kendre Miller",
+   "p": "RB",
+   "t": "DAL",
+   "final": 8.8
+  },
+  {
+   "n": "Mike Evans",
+   "p": "WR",
+   "t": "SF",
+   "final": 10.6
+  },
+  {
+   "n": "Carnell Tate",
+   "p": "WR",
+   "t": "TEN",
+   "final": 11.9
+  }
+ ],
+ "my_team": {
+  "points": 133.32,
+  "opp_points": 170.62,
+  "opp_name": "dklong44",
+  "started": [
+   {
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "pos": "QB",
+    "act": 46.42,
+    "proj": 27.2
+   },
+   {
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "pos": "RB",
+    "act": 12.3,
+    "proj": 16.7
+   },
+   {
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "pos": "RB",
+    "act": 20.3,
+    "proj": 14.7
+   },
+   {
+    "id": "8144",
+    "n": "Chris Olave",
+    "pos": "WR",
+    "act": 6.0,
+    "proj": 16.8
+   },
+   {
+    "id": "13274",
+    "n": "Germie Bernard",
+    "pos": "WR",
+    "act": 1.0,
+    "proj": 10.4
+   },
+   {
+    "id": "5872",
+    "n": "Deebo Samuel Sr.",
+    "pos": "WR",
+    "act": 25.9,
+    "proj": 10.4
+   },
+   {
+    "id": "9500",
+    "n": "Josh Downs",
+    "pos": "WR",
+    "act": 15.3,
+    "proj": 7.3
+   },
+   {
+    "id": "12185",
+    "n": "Spencer Shrader",
+    "pos": "K",
+    "act": 8.1,
+    "proj": null
+   },
+   {
+    "id": "PIT",
+    "n": "PIT",
+    "pos": "DEF",
+    "act": -2.0,
+    "proj": null
+   }
+  ],
+  "tool_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 27.2,
+    "act": 46.42
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 16.7,
+    "act": 12.3
+   },
+   {
+    "slot": "RB",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 14.7,
+    "act": 20.3
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 16.8,
+    "act": 6.0
+   },
+   {
+    "slot": "WR",
+    "id": "13274",
+    "n": "Germie Bernard",
+    "proj": 10.4,
+    "act": 1.0
+   },
+   {
+    "slot": "FLEX",
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "proj": 10.3,
+    "act": 0.0
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "5872",
+    "n": "Deebo Samuel Sr.",
+    "proj": 10.4,
+    "act": 25.9
+   }
+  ],
+  "hindsight_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 27.2,
+    "act": 46.42
+   },
+   {
+    "slot": "RB",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 14.7,
+    "act": 20.3
+   },
+   {
+    "slot": "RB",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 16.7,
+    "act": 12.3
+   },
+   {
+    "slot": "WR",
+    "id": "5872",
+    "n": "Deebo Samuel Sr.",
+    "proj": 10.4,
+    "act": 25.9
+   },
+   {
+    "slot": "WR",
+    "id": "9500",
+    "n": "Josh Downs",
+    "proj": 7.3,
+    "act": 15.3
+   },
+   {
+    "slot": "FLEX",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 8.2,
+    "act": 5.6
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 16.8,
+    "act": 6.0
+   }
+  ],
+  "tool_points": 111.92,
+  "hindsight_points": 131.82,
+  "started_skill_points": 127.22,
+  "tool_vs_started": [
+   "11635",
+   "9500"
+  ]
+ },
+ "pickem": [
+  {
+   "home": "NYG",
+   "away": "WAS",
+   "hs": 21.0,
+   "as": 24.0,
+   "state": "post",
+   "p_home": 0.553,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "DET",
+   "away": "NE",
+   "hs": 35.0,
+   "as": 10.0,
+   "state": "post",
+   "p_home": 0.588,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "ATL",
+   "away": "KC",
+   "hs": 13.0,
+   "as": 35.0,
+   "state": "post",
+   "p_home": 0.395,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "CLE",
+   "away": "HOU",
+   "hs": 27.0,
+   "as": 24.0,
+   "state": "post",
+   "p_home": 0.345,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "GB",
+   "away": "MIN",
+   "hs": 10.0,
+   "as": 30.0,
+   "state": "post",
+   "p_home": 0.588,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "TEN",
+   "away": "JAX",
+   "hs": 23.0,
+   "as": 40.0,
+   "state": "post",
+   "p_home": 0.175,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "IND",
+   "away": "MIA",
+   "hs": 24.0,
+   "as": 22.0,
+   "state": "post",
+   "p_home": 0.655,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "NO",
+   "away": "CAR",
+   "hs": 17.0,
+   "as": 20.0,
+   "state": "post",
+   "p_home": 0.553,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "NYJ",
+   "away": "BUF",
+   "hs": 12.0,
+   "as": 31.0,
+   "state": "post",
+   "p_home": 0.225,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "LV",
+   "away": "SEA",
+   "hs": 13.0,
+   "as": 21.0,
+   "state": "post",
+   "p_home": 0.282,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "ARI",
+   "away": "LAR",
+   "hs": 6.0,
+   "as": 34.0,
+   "state": "post",
+   "p_home": 0.187,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "DAL",
+   "away": "SF",
+   "hs": 40.0,
+   "as": 46.0,
+   "state": "post",
+   "p_home": 0.378,
+   "fav": "away",
+   "winner": "away"
+  },
+  {
+   "home": "CIN",
+   "away": "PIT",
+   "hs": 38.0,
+   "as": 18.0,
+   "state": "post",
+   "p_home": 0.655,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "BAL",
+   "away": "LAC",
+   "hs": 20.0,
+   "as": 23.0,
+   "state": "post",
+   "p_home": 0.655,
+   "fav": "home",
+   "winner": "away"
+  }
+ ]
+}
