@@ -1,0 +1,494 @@
+{
+ "season": 2026,
+ "week": 11,
+ "grade": {
+  "final": {
+   "pairs": 0.6976,
+   "mae": 4.78,
+   "n": 205
+  },
+  "sleeper": {
+   "pairs": 0.6893,
+   "mae": 4.88,
+   "n": 200
+  },
+  "model": {
+   "pairs": 0.6708,
+   "mae": 5.05,
+   "n": 205
+  },
+  "espn": {
+   "pairs": 0.7172,
+   "mae": 5.44,
+   "n": 64
+  }
+ },
+ "big_misses": [
+  {
+   "n": "Ja'Marr Chase",
+   "p": "WR",
+   "t": "CIN",
+   "final": 22.5,
+   "a": 8.1
+  },
+  {
+   "n": "Luther Burden III",
+   "p": "WR",
+   "t": "CHI",
+   "final": 15.6,
+   "a": 3.3
+  },
+  {
+   "n": "Isaiah Likely",
+   "p": "TE",
+   "t": "NYG",
+   "final": 14.8,
+   "a": 4.5
+  },
+  {
+   "n": "Josh Allen",
+   "p": "QB",
+   "t": "BUF",
+   "final": 27.4,
+   "a": 17.16
+  },
+  {
+   "n": "Kirk Cousins",
+   "p": "QB",
+   "t": "MIN",
+   "final": 18.5,
+   "a": 8.4
+  },
+  {
+   "n": "Michael Mayer",
+   "p": "TE",
+   "t": "LV",
+   "final": 11.4,
+   "a": 1.4
+  },
+  {
+   "n": "Jaylen Warren",
+   "p": "RB",
+   "t": "PIT",
+   "final": 14.8,
+   "a": 4.9
+  },
+  {
+   "n": "Cam Skattebo",
+   "p": "RB",
+   "t": "NYG",
+   "final": 15.1,
+   "a": 5.8
+  }
+ ],
+ "big_hits": [
+  {
+   "n": "Jonah Coleman",
+   "p": "RB",
+   "t": "DEN",
+   "final": 17.2,
+   "a": 35.9
+  },
+  {
+   "n": "Dak Prescott",
+   "p": "QB",
+   "t": "DAL",
+   "final": 27.1,
+   "a": 44.9
+  },
+  {
+   "n": "Fernando Mendoza",
+   "p": "QB",
+   "t": "LV",
+   "final": 12.8,
+   "a": 29.88
+  },
+  {
+   "n": "Ashton Jeanty",
+   "p": "RB",
+   "t": "LV",
+   "final": 12.2,
+   "a": 27.9
+  },
+  {
+   "n": "Antonio Williams",
+   "p": "WR",
+   "t": "WAS",
+   "final": 8.3,
+   "a": 22.2
+  },
+  {
+   "n": "Travis Kelce",
+   "p": "TE",
+   "t": "KC",
+   "final": 11.8,
+   "a": 25.4
+  },
+  {
+   "n": "Mike Evans",
+   "p": "WR",
+   "t": "SF",
+   "final": 12.7,
+   "a": 23.9
+  },
+  {
+   "n": "Chuba Hubbard",
+   "p": "RB",
+   "t": "CAR",
+   "final": 16.4,
+   "a": 27.0
+  }
+ ],
+ "projected_but_dnp": [
+  {
+   "n": "Carson Beck",
+   "p": "QB",
+   "t": "ARI",
+   "final": 9.3
+  },
+  {
+   "n": "Dalton Kincaid",
+   "p": "TE",
+   "t": "BUF",
+   "final": 9.6
+  },
+  {
+   "n": "Kendre Miller",
+   "p": "RB",
+   "t": "DAL",
+   "final": 10.7
+  },
+  {
+   "n": "Wan'Dale Robinson",
+   "p": "WR",
+   "t": "TEN",
+   "final": 10.4
+  },
+  {
+   "n": "Kenneth Walker III",
+   "p": "RB",
+   "t": "KC",
+   "final": 18.9
+  },
+  {
+   "n": "Brock Bowers",
+   "p": "TE",
+   "t": "LV",
+   "final": 14.0
+  },
+  {
+   "n": "Omar Cooper Jr.",
+   "p": "WR",
+   "t": "NYJ",
+   "final": 9.2
+  }
+ ],
+ "my_team": {
+  "points": 144.06,
+  "opp_points": 87.16,
+  "opp_name": "Pirates of the CaribBijan",
+  "started": [
+   {
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "pos": "QB",
+    "act": 31.96,
+    "proj": 27.7
+   },
+   {
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "pos": "RB",
+    "act": 6.7,
+    "proj": 14.9
+   },
+   {
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "pos": "RB",
+    "act": 8.3,
+    "proj": 15.7
+   },
+   {
+    "id": "8144",
+    "n": "Chris Olave",
+    "pos": "WR",
+    "act": 20.2,
+    "proj": 14.4
+   },
+   {
+    "id": "9500",
+    "n": "Josh Downs",
+    "pos": "WR",
+    "act": 9.9,
+    "proj": 9.2
+   },
+   {
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "pos": "RB",
+    "act": 35.9,
+    "proj": 17.2
+   },
+   {
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "pos": "WR",
+    "act": 20.7,
+    "proj": 11.0
+   },
+   {
+    "id": "12185",
+    "n": "Spencer Shrader",
+    "pos": "K",
+    "act": 3.4,
+    "proj": null
+   },
+   {
+    "id": "PIT",
+    "n": "PIT",
+    "pos": "DEF",
+    "act": 7.0,
+    "proj": null
+   }
+  ],
+  "tool_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 27.7,
+    "act": 31.96
+   },
+   {
+    "slot": "RB",
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "proj": 17.2,
+    "act": 35.9
+   },
+   {
+    "slot": "RB",
+    "id": "12490",
+    "n": "Bhayshul Tuten",
+    "proj": 15.7,
+    "act": 8.3
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 14.4,
+    "act": 20.2
+   },
+   {
+    "slot": "WR",
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "proj": 11.0,
+    "act": 20.7
+   },
+   {
+    "slot": "FLEX",
+    "id": "6813",
+    "n": "Jonathan Taylor",
+    "proj": 14.9,
+    "act": 6.7
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "9500",
+    "n": "Josh Downs",
+    "proj": 9.2,
+    "act": 9.9
+   }
+  ],
+  "hindsight_lineup": [
+   {
+    "slot": "QB",
+    "id": "4046",
+    "n": "Patrick Mahomes",
+    "proj": 27.7,
+    "act": 31.96
+   },
+   {
+    "slot": "RB",
+    "id": "13345",
+    "n": "Jonah Coleman",
+    "proj": 17.2,
+    "act": 35.9
+   },
+   {
+    "slot": "RB",
+    "id": "4866",
+    "n": "Saquon Barkley",
+    "proj": 11.6,
+    "act": 13.5
+   },
+   {
+    "slot": "WR",
+    "id": "11635",
+    "n": "Ladd McConkey",
+    "proj": 11.0,
+    "act": 20.7
+   },
+   {
+    "slot": "WR",
+    "id": "8144",
+    "n": "Chris Olave",
+    "proj": 14.4,
+    "act": 20.2
+   },
+   {
+    "slot": "FLEX",
+    "id": "11576",
+    "n": "Braelon Allen",
+    "proj": 9.2,
+    "act": 9.4
+   },
+   {
+    "slot": "REC_FLEX",
+    "id": "9500",
+    "n": "Josh Downs",
+    "proj": 9.2,
+    "act": 9.9
+   }
+  ],
+  "tool_points": 133.66,
+  "hindsight_points": 141.56,
+  "started_skill_points": 133.66,
+  "tool_vs_started": []
+ },
+ "pickem": [
+  {
+   "home": "HOU",
+   "away": "IND",
+   "hs": 26.0,
+   "as": 3.0,
+   "state": "post",
+   "p_home": 0.867,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "BUF",
+   "away": "MIA",
+   "hs": 26.0,
+   "as": 9.0,
+   "state": "post",
+   "p_home": 0.929,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "CHI",
+   "away": "NO",
+   "hs": 21.0,
+   "as": 13.0,
+   "state": "post",
+   "p_home": 0.847,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "DAL",
+   "away": "TEN",
+   "hs": 51.0,
+   "as": 30.0,
+   "state": "post",
+   "p_home": 0.748,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "DET",
+   "away": "TB",
+   "hs": 31.0,
+   "as": 21.0,
+   "state": "post",
+   "p_home": 0.622,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "KC",
+   "away": "ARI",
+   "hs": 34.0,
+   "as": 7.0,
+   "state": "post",
+   "p_home": 0.916,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "PHI",
+   "away": "PIT",
+   "hs": 19.0,
+   "as": 16.0,
+   "state": "post",
+   "p_home": 0.378,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "CAR",
+   "away": "BAL",
+   "hs": 35.0,
+   "as": 33.0,
+   "state": "post",
+   "p_home": 0.588,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "LAC",
+   "away": "NYJ",
+   "hs": 24.0,
+   "as": 27.0,
+   "state": "post",
+   "p_home": 0.605,
+   "fav": "home",
+   "winner": "away"
+  },
+  {
+   "home": "DEN",
+   "away": "LV",
+   "hs": 38.0,
+   "as": 24.0,
+   "state": "post",
+   "p_home": 0.847,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "NYG",
+   "away": "JAX",
+   "hs": 23.0,
+   "as": 18.0,
+   "state": "post",
+   "p_home": 0.297,
+   "fav": "away",
+   "winner": "home"
+  },
+  {
+   "home": "SF",
+   "away": "MIN",
+   "hs": 35.0,
+   "as": 10.0,
+   "state": "post",
+   "p_home": 0.655,
+   "fav": "home",
+   "winner": "home"
+  },
+  {
+   "home": "WAS",
+   "away": "CIN",
+   "hs": 22.0,
+   "as": 20.0,
+   "state": "post",
+   "p_home": 0.297,
+   "fav": "away",
+   "winner": "home"
+  }
+ ]
+}
